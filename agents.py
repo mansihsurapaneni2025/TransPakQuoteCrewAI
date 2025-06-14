@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 from crewai import Agent
 from crewai_tools import SerperDevTool, WebsiteSearchTool
+import pricing_tools
 
 class TransPakAgents:
     def __init__(self):

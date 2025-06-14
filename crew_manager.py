@@ -5,6 +5,8 @@ import time
 from crewai import Crew, Process
 from agents import TransPakAgents
 from tasks import TransPakTasks
+import pricing_tools
+import json
 from ai_enhancements import AIEnhancementEngine
 
 class TransPakCrewManager:
