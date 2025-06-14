@@ -4,43 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Agents Process - TransPak AI Quoter</title>
-    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --neutral-50: #fafafa;
+            --neutral-100: #f5f5f5;
+            --neutral-200: #e5e5e5;
+            --neutral-300: #d4d4d4;
+            --neutral-400: #a3a3a3;
+            --neutral-500: #737373;
+            --neutral-600: #525252;
+            --neutral-700: #404040;
+            --neutral-800: #262626;
+            --neutral-900: #171717;
+        }
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background-color: var(--neutral-50);
+            color: var(--neutral-800);
+        }
+        
+        .navbar {
+            background-color: white;
+            border-bottom: 1px solid var(--neutral-200);
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+        
+        .card {
+            background-color: white;
+            border: 1px solid var(--neutral-200);
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+        
+        .card-header {
+            background-color: var(--neutral-50);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
         .hero-section {
-            background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-info) 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             padding: 4rem 0;
             margin-bottom: 2rem;
         }
         .process-card {
-            border: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--neutral-200);
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
             transition: transform 0.3s ease;
             height: 100%;
+            background-color: white;
         }
         .process-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 4px 12px 0 rgb(0 0 0 / 0.15);
         }
         .agent-flow {
-            background: var(--bs-dark);
+            background: white;
+            border: 1px solid var(--neutral-200);
             border-radius: 8px;
             padding: 2rem;
             margin: 2rem 0;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
         }
         .flow-arrow {
             font-size: 2rem;
-            color: var(--bs-primary);
+            color: var(--primary-color);
             text-align: center;
             margin: 1rem 0;
         }
         .comparison-table {
-            background: var(--bs-dark);
+            background: white;
+            border: 1px solid var(--neutral-200);
             border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
         }
         .tech-badge {
-            background: var(--bs-primary);
+            background: var(--primary-color);
             color: white;
             padding: 0.25rem 0.75rem;
             border-radius: 15px;
@@ -49,42 +99,60 @@
             display: inline-block;
         }
         .benefit-icon {
-            color: var(--bs-success);
+            color: #10b981;
             font-size: 1.5rem;
             margin-right: 0.5rem;
         }
         .traditional-icon {
-            color: var(--bs-warning);
+            color: #f59e0b;
             font-size: 1.5rem;
             margin-right: 0.5rem;
+        }
+        .nav-link {
+            color: var(--neutral-600) !important;
+        }
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+        .nav-link.active {
+            color: var(--primary-color) !important;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <i class="bi bi-robot"></i> TransPak AI Quoter
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/ai-agents-process">AI Agents Process</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/analytics">Analytics</a>
-                    </li>
-                </ul>
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row">
+            <div class="col-12">
+                <nav class="navbar navbar-expand-lg">
+                    <div class="container">
+                        <span class="navbar-brand mb-0 h1">
+                            <i class="fas fa-shipping-fast me-2"></i>
+                            TransPak AI Quoter
+                        </span>
+                        <div class="navbar-nav ms-auto">
+                            <a class="nav-link" href="/">
+                                <i class="fas fa-home me-1"></i>
+                                Home
+                            </a>
+                            <a class="nav-link active" href="/ai-agents-process">
+                                <i class="fas fa-robot me-1"></i>
+                                AI Agents Process
+                            </a>
+                            <a class="nav-link" href="/quotes">
+                                <i class="fas fa-history me-1"></i>
+                                Quote History
+                            </a>
+                            <a class="nav-link" href="/admin">
+                                <i class="fas fa-chart-bar me-1"></i>
+                                Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </nav>
             </div>
         </div>
-    </nav>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -113,35 +181,35 @@
             <h2 class="text-center mb-4">Traditional vs AI Agent Process</h2>
             <div class="row">
                 <div class="col-lg-6 mb-4">
-                    <div class="card process-card bg-secondary">
-                        <div class="card-header bg-warning text-dark">
-                            <h4><i class="traditional-icon bi bi-person-workspace"></i>Traditional Manual Process</h4>
+                    <div class="card process-card">
+                        <div class="card-header" style="background-color: #fef3c7; border-color: #f59e0b;">
+                            <h4><i class="traditional-icon fas fa-user-tie"></i>Traditional Manual Process</h4>
                         </div>
                         <div class="card-body">
                             <ul class="list-unstyled">
-                                <li class="mb-2"><i class="bi bi-clock text-warning"></i> <strong>Hours/Days:</strong> Manual data gathering</li>
-                                <li class="mb-2"><i class="bi bi-calculator text-warning"></i> <strong>Error-Prone:</strong> Manual calculations</li>
-                                <li class="mb-2"><i class="bi bi-people text-warning"></i> <strong>Resource Intensive:</strong> Multiple specialists required</li>
-                                <li class="mb-2"><i class="bi bi-arrow-repeat text-warning"></i> <strong>Inconsistent:</strong> Varies by human expertise</li>
-                                <li class="mb-2"><i class="bi bi-graph-down text-warning"></i> <strong>Limited Scalability:</strong> Bottlenecked by human capacity</li>
-                                <li class="mb-2"><i class="bi bi-file-text text-warning"></i> <strong>Poor Documentation:</strong> Minimal process tracking</li>
+                                <li class="mb-2"><i class="fas fa-clock" style="color: #f59e0b;"></i> <strong>Hours/Days:</strong> Manual data gathering</li>
+                                <li class="mb-2"><i class="fas fa-calculator" style="color: #f59e0b;"></i> <strong>Error-Prone:</strong> Manual calculations</li>
+                                <li class="mb-2"><i class="fas fa-users" style="color: #f59e0b;"></i> <strong>Resource Intensive:</strong> Multiple specialists required</li>
+                                <li class="mb-2"><i class="fas fa-sync-alt" style="color: #f59e0b;"></i> <strong>Inconsistent:</strong> Varies by human expertise</li>
+                                <li class="mb-2"><i class="fas fa-chart-line" style="color: #f59e0b;"></i> <strong>Limited Scalability:</strong> Bottlenecked by human capacity</li>
+                                <li class="mb-2"><i class="fas fa-file-alt" style="color: #f59e0b;"></i> <strong>Poor Documentation:</strong> Minimal process tracking</li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-4">
-                    <div class="card process-card bg-secondary">
-                        <div class="card-header bg-success">
-                            <h4><i class="benefit-icon bi bi-robot"></i>Google CrewAI A2A Process</h4>
+                    <div class="card process-card">
+                        <div class="card-header" style="background-color: #d1fae5; border-color: #10b981;">
+                            <h4><i class="benefit-icon fas fa-robot"></i>Google CrewAI A2A Process</h4>
                         </div>
                         <div class="card-body">
                             <ul class="list-unstyled">
-                                <li class="mb-2"><i class="bi bi-lightning text-success"></i> <strong>Minutes:</strong> Instant data processing</li>
-                                <li class="mb-2"><i class="bi bi-shield-check text-success"></i> <strong>99.9% Accurate:</strong> AI-powered precision</li>
-                                <li class="mb-2"><i class="bi bi-cpu text-success"></i> <strong>Autonomous:</strong> Four specialized AI agents</li>
-                                <li class="mb-2"><i class="bi bi-arrow-clockwise text-success"></i> <strong>Consistent:</strong> Standardized AI reasoning</li>
-                                <li class="mb-2"><i class="bi bi-graph-up text-success"></i> <strong>Infinite Scalability:</strong> Cloud-based processing</li>
-                                <li class="mb-2"><i class="bi bi-journal-text text-success"></i> <strong>Complete Traceability:</strong> Full agent activity logs</li>
+                                <li class="mb-2"><i class="fas fa-bolt" style="color: #10b981;"></i> <strong>Minutes:</strong> Instant data processing</li>
+                                <li class="mb-2"><i class="fas fa-shield-alt" style="color: #10b981;"></i> <strong>99.9% Accurate:</strong> AI-powered precision</li>
+                                <li class="mb-2"><i class="fas fa-microchip" style="color: #10b981;"></i> <strong>Autonomous:</strong> Four specialized AI agents</li>
+                                <li class="mb-2"><i class="fas fa-sync" style="color: #10b981;"></i> <strong>Consistent:</strong> Standardized AI reasoning</li>
+                                <li class="mb-2"><i class="fas fa-chart-line" style="color: #10b981;"></i> <strong>Infinite Scalability:</strong> Cloud-based processing</li>
+                                <li class="mb-2"><i class="fas fa-clipboard-list" style="color: #10b981;"></i> <strong>Complete Traceability:</strong> Full agent activity logs</li>
                             </ul>
                         </div>
                     </div>
@@ -212,24 +280,24 @@
             <h2 class="text-center mb-4">Advanced Technology Integration</h2>
             <div class="row">
                 <div class="col-lg-4 mb-4">
-                    <div class="card process-card bg-secondary">
+                    <div class="card process-card">
                         <div class="card-body text-center">
-                            <i class="bi bi-google display-3 text-primary mb-3"></i>
+                            <i class="fab fa-google display-3 mb-3" style="color: var(--primary-color);"></i>
                             <h4>Google CrewAI A2A</h4>
                             <p>Agent-to-Agent communication framework enabling seamless collaboration between specialized AI agents</p>
                             <ul class="list-unstyled text-start">
-                                <li><i class="bi bi-check text-success"></i> Multi-agent orchestration</li>
-                                <li><i class="bi bi-check text-success"></i> Real-time agent communication</li>
-                                <li><i class="bi bi-check text-success"></i> Task delegation & coordination</li>
-                                <li><i class="bi bi-check text-success"></i> Parallel processing capabilities</li>
+                                <li><i class="fas fa-check" style="color: #10b981;"></i> Multi-agent orchestration</li>
+                                <li><i class="fas fa-check" style="color: #10b981;"></i> Real-time agent communication</li>
+                                <li><i class="fas fa-check" style="color: #10b981;"></i> Task delegation & coordination</li>
+                                <li><i class="fas fa-check" style="color: #10b981;"></i> Parallel processing capabilities</li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 mb-4">
-                    <div class="card process-card bg-secondary">
+                    <div class="card process-card">
                         <div class="card-body text-center">
-                            <i class="bi bi-diagram-3 display-3 text-info mb-3"></i>
+                            <i class="fas fa-project-diagram display-3 mb-3" style="color: var(--secondary-color);"></i>
                             <h4>Model Context Protocol</h4>
                             <p>Standardized protocol for AI model communication with external data sources and services</p>
                             <ul class="list-unstyled text-start">
@@ -263,51 +331,51 @@
         <section class="mb-5">
             <h2 class="text-center mb-4">Process Automation Benefits</h2>
             <div class="comparison-table">
-                <table class="table table-dark table-striped mb-0">
-                    <thead class="table-primary">
+                <table class="table table-striped mb-0">
+                    <thead style="background-color: var(--neutral-100);">
                         <tr>
-                            <th>Process Aspect</th>
-                            <th>Traditional Method</th>
-                            <th>AI Agent Automation</th>
-                            <th>Improvement</th>
+                            <th style="color: var(--neutral-800);">Process Aspect</th>
+                            <th style="color: var(--neutral-800);">Traditional Method</th>
+                            <th style="color: var(--neutral-800);">AI Agent Automation</th>
+                            <th style="color: var(--neutral-800);">Improvement</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><strong>Processing Time</strong></td>
-                            <td><i class="bi bi-clock text-warning"></i> 2-4 hours</td>
-                            <td><i class="bi bi-lightning text-success"></i> 2-3 minutes</td>
-                            <td><span class="badge bg-success">98% faster</span></td>
+                            <td><i class="fas fa-clock" style="color: #f59e0b;"></i> 2-4 hours</td>
+                            <td><i class="fas fa-bolt" style="color: #10b981;"></i> 2-3 minutes</td>
+                            <td><span class="badge" style="background-color: #10b981; color: white;">98% faster</span></td>
                         </tr>
                         <tr>
                             <td><strong>Accuracy Rate</strong></td>
-                            <td><i class="bi bi-exclamation-triangle text-warning"></i> 85-90%</td>
-                            <td><i class="bi bi-shield-check text-success"></i> 99.9%</td>
-                            <td><span class="badge bg-success">15% improvement</span></td>
+                            <td><i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i> 85-90%</td>
+                            <td><i class="fas fa-shield-alt" style="color: #10b981;"></i> 99.9%</td>
+                            <td><span class="badge" style="background-color: #10b981; color: white;">15% improvement</span></td>
                         </tr>
                         <tr>
                             <td><strong>Cost per Quote</strong></td>
-                            <td><i class="bi bi-currency-dollar text-warning"></i> $45-60</td>
-                            <td><i class="bi bi-currency-dollar text-success"></i> $2-3</td>
-                            <td><span class="badge bg-success">95% cost reduction</span></td>
+                            <td><i class="fas fa-dollar-sign" style="color: #f59e0b;"></i> $45-60</td>
+                            <td><i class="fas fa-dollar-sign" style="color: #10b981;"></i> $2-3</td>
+                            <td><span class="badge" style="background-color: #10b981; color: white;">95% cost reduction</span></td>
                         </tr>
                         <tr>
                             <td><strong>Available Hours</strong></td>
-                            <td><i class="bi bi-clock text-warning"></i> 8 hours/day</td>
-                            <td><i class="bi bi-clock text-success"></i> 24/7/365</td>
-                            <td><span class="badge bg-success">300% availability</span></td>
+                            <td><i class="fas fa-clock" style="color: #f59e0b;"></i> 8 hours/day</td>
+                            <td><i class="fas fa-clock" style="color: #10b981;"></i> 24/7/365</td>
+                            <td><span class="badge" style="background-color: #10b981; color: white;">300% availability</span></td>
                         </tr>
                         <tr>
                             <td><strong>Scalability</strong></td>
-                            <td><i class="bi bi-person text-warning"></i> Limited by staff</td>
-                            <td><i class="bi bi-infinity text-success"></i> Unlimited</td>
-                            <td><span class="badge bg-success">Infinite scale</span></td>
+                            <td><i class="fas fa-user" style="color: #f59e0b;"></i> Limited by staff</td>
+                            <td><i class="fas fa-infinity" style="color: #10b981;"></i> Unlimited</td>
+                            <td><span class="badge" style="background-color: #10b981; color: white;">Infinite scale</span></td>
                         </tr>
                         <tr>
                             <td><strong>Data Integration</strong></td>
-                            <td><i class="bi bi-file-text text-warning"></i> Manual lookup</td>
-                            <td><i class="bi bi-cloud-download text-success"></i> Real-time APIs</td>
-                            <td><span class="badge bg-success">Live data</span></td>
+                            <td><i class="fas fa-file-alt" style="color: #f59e0b;"></i> Manual lookup</td>
+                            <td><i class="fas fa-cloud-download-alt" style="color: #10b981;"></i> Real-time APIs</td>
+                            <td><span class="badge" style="background-color: #10b981; color: white;">Live data</span></td>
                         </tr>
                     </tbody>
                 </table>
