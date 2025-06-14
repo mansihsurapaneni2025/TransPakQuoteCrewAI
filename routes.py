@@ -13,6 +13,10 @@ from cache_manager import CacheManager
 from analytics_dashboard import analytics_bp
 from monitoring_config import system_monitor, get_deployment_readiness
 
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 # Initialize extensions
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -20,6 +24,7 @@ login_manager.login_view = 'login'
 
 security = SecurityMiddleware()
 cache_manager = CacheManager()
+crew_manager = TransPakCrewManager()
 
 # Register analytics blueprint
 app.register_blueprint(analytics_bp)
@@ -202,9 +207,12 @@ def generate_quote():
             return render_template('index.html', form_data=shipment_info)
             
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
         logger.error(f"Error in generate_quote route: {str(e)}")
+        logger.error(f"Full traceback: {error_details}")
         flash("An unexpected error occurred. Please try again.", 'error')
-        return render_template('index.html')
+        return render_template('index.html', form_data=shipment_info if 'shipment_info' in locals() else {})
 
 @app.route('/new_quote')
 def new_quote():
