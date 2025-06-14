@@ -52,21 +52,21 @@
         }
         
         .hero-section {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 4rem 0;
+            background-color: var(--neutral-100);
+            color: var(--neutral-800);
+            padding: 3rem 0;
             margin-bottom: 2rem;
+            border-bottom: 1px solid var(--neutral-200);
         }
         .process-card {
             border: 1px solid var(--neutral-200);
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-            transition: transform 0.3s ease;
+            box-shadow: none;
+            transition: box-shadow 0.3s ease;
             height: 100%;
             background-color: white;
         }
         .process-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px 0 rgb(0 0 0 / 0.15);
+            box-shadow: 0 2px 8px 0 rgb(0 0 0 / 0.1);
         }
         .agent-flow {
             background: white;
@@ -74,11 +74,10 @@
             border-radius: 8px;
             padding: 2rem;
             margin: 2rem 0;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
         }
         .flow-arrow {
-            font-size: 2rem;
-            color: var(--primary-color);
+            font-size: 1.5rem;
+            color: var(--neutral-500);
             text-align: center;
             margin: 1rem 0;
         }
@@ -87,25 +86,19 @@
             border: 1px solid var(--neutral-200);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
         }
         .tech-badge {
-            background: var(--primary-color);
-            color: white;
+            background: var(--neutral-200);
+            color: var(--neutral-700);
             padding: 0.25rem 0.75rem;
             border-radius: 15px;
             font-size: 0.875rem;
             margin: 0.25rem;
             display: inline-block;
         }
-        .benefit-icon {
-            color: #10b981;
-            font-size: 1.5rem;
-            margin-right: 0.5rem;
-        }
-        .traditional-icon {
-            color: #f59e0b;
-            font-size: 1.5rem;
+        .neutral-icon {
+            color: var(--neutral-500);
+            font-size: 1.2rem;
             margin-right: 0.5rem;
         }
         .nav-link {
@@ -169,7 +162,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4 text-center">
-                    <i class="bi bi-diagram-3 display-1"></i>
+                    <i class="fas fa-cogs display-1" style="color: var(--neutral-400);"></i>
                 </div>
             </div>
         </div>
@@ -182,34 +175,34 @@
             <div class="row">
                 <div class="col-lg-6 mb-4">
                     <div class="card process-card">
-                        <div class="card-header" style="background-color: #fef3c7; border-color: #f59e0b;">
-                            <h4><i class="traditional-icon fas fa-user-tie"></i>Traditional Manual Process</h4>
+                        <div class="card-header">
+                            <h4><i class="neutral-icon fas fa-user-tie"></i>Traditional Manual Process</h4>
                         </div>
                         <div class="card-body">
                             <ul class="list-unstyled">
-                                <li class="mb-2"><i class="fas fa-clock" style="color: #f59e0b;"></i> <strong>Hours/Days:</strong> Manual data gathering</li>
-                                <li class="mb-2"><i class="fas fa-calculator" style="color: #f59e0b;"></i> <strong>Error-Prone:</strong> Manual calculations</li>
-                                <li class="mb-2"><i class="fas fa-users" style="color: #f59e0b;"></i> <strong>Resource Intensive:</strong> Multiple specialists required</li>
-                                <li class="mb-2"><i class="fas fa-sync-alt" style="color: #f59e0b;"></i> <strong>Inconsistent:</strong> Varies by human expertise</li>
-                                <li class="mb-2"><i class="fas fa-chart-line" style="color: #f59e0b;"></i> <strong>Limited Scalability:</strong> Bottlenecked by human capacity</li>
-                                <li class="mb-2"><i class="fas fa-file-alt" style="color: #f59e0b;"></i> <strong>Poor Documentation:</strong> Minimal process tracking</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-clock"></i> <strong>Hours/Days:</strong> Manual data gathering</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-calculator"></i> <strong>Error-Prone:</strong> Manual calculations</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-users"></i> <strong>Resource Intensive:</strong> Multiple specialists required</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-sync-alt"></i> <strong>Inconsistent:</strong> Varies by human expertise</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-chart-line"></i> <strong>Limited Scalability:</strong> Bottlenecked by human capacity</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-file-alt"></i> <strong>Poor Documentation:</strong> Minimal process tracking</li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-4">
                     <div class="card process-card">
-                        <div class="card-header" style="background-color: #d1fae5; border-color: #10b981;">
-                            <h4><i class="benefit-icon fas fa-robot"></i>Google CrewAI A2A Process</h4>
+                        <div class="card-header">
+                            <h4><i class="neutral-icon fas fa-robot"></i>Google CrewAI A2A Process</h4>
                         </div>
                         <div class="card-body">
                             <ul class="list-unstyled">
-                                <li class="mb-2"><i class="fas fa-bolt" style="color: #10b981;"></i> <strong>Minutes:</strong> Instant data processing</li>
-                                <li class="mb-2"><i class="fas fa-shield-alt" style="color: #10b981;"></i> <strong>99.9% Accurate:</strong> AI-powered precision</li>
-                                <li class="mb-2"><i class="fas fa-microchip" style="color: #10b981;"></i> <strong>Autonomous:</strong> Four specialized AI agents</li>
-                                <li class="mb-2"><i class="fas fa-sync" style="color: #10b981;"></i> <strong>Consistent:</strong> Standardized AI reasoning</li>
-                                <li class="mb-2"><i class="fas fa-chart-line" style="color: #10b981;"></i> <strong>Infinite Scalability:</strong> Cloud-based processing</li>
-                                <li class="mb-2"><i class="fas fa-clipboard-list" style="color: #10b981;"></i> <strong>Complete Traceability:</strong> Full agent activity logs</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-bolt"></i> <strong>Minutes:</strong> Instant data processing</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-shield-alt"></i> <strong>99.9% Accurate:</strong> AI-powered precision</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-microchip"></i> <strong>Autonomous:</strong> Four specialized AI agents</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-sync"></i> <strong>Consistent:</strong> Standardized AI reasoning</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-chart-line"></i> <strong>Infinite Scalability:</strong> Cloud-based processing</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-clipboard-list"></i> <strong>Complete Traceability:</strong> Full agent activity logs</li>
                             </ul>
                         </div>
                     </div>
@@ -223,51 +216,51 @@
             <div class="agent-flow">
                 <div class="row">
                     <div class="col-lg-3 text-center mb-3">
-                        <div class="card bg-primary text-white">
+                        <div class="card process-card">
                             <div class="card-body">
-                                <i class="bi bi-person-badge display-4 mb-2"></i>
+                                <i class="fas fa-user-check display-4 mb-2" style="color: var(--neutral-500);"></i>
                                 <h5>Sales Briefing Agent</h5>
-                                <p class="small">Analyzes shipment details and customer requirements</p>
+                                <p class="small text-muted">Analyzes shipment details and customer requirements</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-1 flow-arrow">
-                        <i class="bi bi-arrow-right"></i>
+                        <i class="fas fa-arrow-right"></i>
                     </div>
                     <div class="col-lg-3 text-center mb-3">
-                        <div class="card bg-info text-white">
+                        <div class="card process-card">
                             <div class="card-body">
-                                <i class="bi bi-box-seam display-4 mb-2"></i>
+                                <i class="fas fa-box display-4 mb-2" style="color: var(--neutral-500);"></i>
                                 <h5>Crating Design Agent</h5>
-                                <p class="small">Engineers optimal packaging solutions with material costs</p>
+                                <p class="small text-muted">Engineers optimal packaging solutions with material costs</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-1 flow-arrow">
-                        <i class="bi bi-arrow-right"></i>
+                        <i class="fas fa-arrow-right"></i>
                     </div>
                     <div class="col-lg-3 text-center mb-3">
-                        <div class="card bg-warning text-dark">
+                        <div class="card process-card">
                             <div class="card-body">
-                                <i class="bi bi-truck display-4 mb-2"></i>
+                                <i class="fas fa-truck display-4 mb-2" style="color: var(--neutral-500);"></i>
                                 <h5>Logistics Planner Agent</h5>
-                                <p class="small">Optimizes routes and calculates shipping costs</p>
+                                <p class="small text-muted">Optimizes routes and calculates shipping costs</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 flow-arrow">
-                        <i class="bi bi-arrow-down"></i>
+                        <i class="fas fa-arrow-down"></i>
                     </div>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-lg-6 text-center">
-                        <div class="card bg-success text-white">
+                        <div class="card process-card">
                             <div class="card-body">
-                                <i class="bi bi-file-earmark-text display-4 mb-2"></i>
+                                <i class="fas fa-file-alt display-4 mb-2" style="color: var(--neutral-500);"></i>
                                 <h5>Quote Consolidator Agent</h5>
-                                <p class="small">Assembles comprehensive professional quote with full cost breakdown</p>
+                                <p class="small text-muted">Assembles comprehensive professional quote with full cost breakdown</p>
                             </div>
                         </div>
                     </div>
@@ -282,14 +275,14 @@
                 <div class="col-lg-4 mb-4">
                     <div class="card process-card">
                         <div class="card-body text-center">
-                            <i class="fab fa-google display-3 mb-3" style="color: var(--primary-color);"></i>
+                            <i class="fab fa-google display-3 mb-3" style="color: var(--neutral-500);"></i>
                             <h4>Google CrewAI A2A</h4>
-                            <p>Agent-to-Agent communication framework enabling seamless collaboration between specialized AI agents</p>
+                            <p class="text-muted">Agent-to-Agent communication framework enabling seamless collaboration between specialized AI agents</p>
                             <ul class="list-unstyled text-start">
-                                <li><i class="fas fa-check" style="color: #10b981;"></i> Multi-agent orchestration</li>
-                                <li><i class="fas fa-check" style="color: #10b981;"></i> Real-time agent communication</li>
-                                <li><i class="fas fa-check" style="color: #10b981;"></i> Task delegation & coordination</li>
-                                <li><i class="fas fa-check" style="color: #10b981;"></i> Parallel processing capabilities</li>
+                                <li class="mb-1"><i class="neutral-icon fas fa-check"></i> Multi-agent orchestration</li>
+                                <li class="mb-1"><i class="neutral-icon fas fa-check"></i> Real-time agent communication</li>
+                                <li class="mb-1"><i class="neutral-icon fas fa-check"></i> Task delegation & coordination</li>
+                                <li class="mb-1"><i class="neutral-icon fas fa-check"></i> Parallel processing capabilities</li>
                             </ul>
                         </div>
                     </div>
@@ -297,14 +290,14 @@
                 <div class="col-lg-4 mb-4">
                     <div class="card process-card">
                         <div class="card-body text-center">
-                            <i class="fas fa-project-diagram display-3 mb-3" style="color: var(--secondary-color);"></i>
+                            <i class="fas fa-project-diagram display-3 mb-3" style="color: var(--neutral-500);"></i>
                             <h4>Model Context Protocol</h4>
-                            <p>Standardized protocol for AI model communication with external data sources and services</p>
+                            <p class="text-muted">Standardized protocol for AI model communication with external data sources and services</p>
                             <ul class="list-unstyled text-start">
-                                <li><i class="fas fa-check" style="color: #10b981;"></i> Real-time data integration</li>
-                                <li><i class="fas fa-check" style="color: #10b981;"></i> External API connectivity</li>
-                                <li><i class="fas fa-check" style="color: #10b981;"></i> Live market data feeds</li>
-                                <li><i class="fas fa-check" style="color: #10b981;"></i> Dynamic pricing calculations</li>
+                                <li class="mb-1"><i class="neutral-icon fas fa-check"></i> Real-time data integration</li>
+                                <li class="mb-1"><i class="neutral-icon fas fa-check"></i> External API connectivity</li>
+                                <li class="mb-1"><i class="neutral-icon fas fa-check"></i> Live market data feeds</li>
+                                <li class="mb-1"><i class="neutral-icon fas fa-check"></i> Dynamic pricing calculations</li>
                             </ul>
                         </div>
                     </div>
@@ -312,14 +305,14 @@
                 <div class="col-lg-4 mb-4">
                     <div class="card process-card">
                         <div class="card-body text-center">
-                            <i class="fas fa-microchip display-3 mb-3" style="color: #f59e0b;"></i>
+                            <i class="fas fa-microchip display-3 mb-3" style="color: var(--neutral-500);"></i>
                             <h4>OpenAI GPT-4o Integration</h4>
-                            <p>Latest multimodal AI model powering intelligent reasoning and decision-making processes</p>
+                            <p class="text-muted">Latest multimodal AI model powering intelligent reasoning and decision-making processes</p>
                             <ul class="list-unstyled text-start">
-                                <li><i class="fas fa-check" style="color: #10b981;"></i> Advanced reasoning capabilities</li>
-                                <li><i class="fas fa-check" style="color: #10b981;"></i> Context-aware responses</li>
-                                <li><i class="fas fa-check" style="color: #10b981;"></i> Real-time learning & adaptation</li>
-                                <li><i class="fas fa-check" style="color: #10b981;"></i> Comprehensive analysis & insights</li>
+                                <li class="mb-1"><i class="neutral-icon fas fa-check"></i> Advanced reasoning capabilities</li>
+                                <li class="mb-1"><i class="neutral-icon fas fa-check"></i> Context-aware responses</li>
+                                <li class="mb-1"><i class="neutral-icon fas fa-check"></i> Real-time learning & adaptation</li>
+                                <li class="mb-1"><i class="neutral-icon fas fa-check"></i> Comprehensive analysis & insights</li>
                             </ul>
                         </div>
                     </div>
@@ -343,39 +336,39 @@
                     <tbody>
                         <tr>
                             <td><strong>Processing Time</strong></td>
-                            <td><i class="fas fa-clock" style="color: #f59e0b;"></i> 2-4 hours</td>
-                            <td><i class="fas fa-bolt" style="color: #10b981;"></i> 2-3 minutes</td>
-                            <td><span class="badge" style="background-color: #10b981; color: white;">98% faster</span></td>
+                            <td><i class="neutral-icon fas fa-clock"></i> 2-4 hours</td>
+                            <td><i class="neutral-icon fas fa-bolt"></i> 2-3 minutes</td>
+                            <td><span class="badge" style="background-color: var(--neutral-600); color: white;">98% faster</span></td>
                         </tr>
                         <tr>
                             <td><strong>Accuracy Rate</strong></td>
-                            <td><i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i> 85-90%</td>
-                            <td><i class="fas fa-shield-alt" style="color: #10b981;"></i> 99.9%</td>
-                            <td><span class="badge" style="background-color: #10b981; color: white;">15% improvement</span></td>
+                            <td><i class="neutral-icon fas fa-exclamation-triangle"></i> 85-90%</td>
+                            <td><i class="neutral-icon fas fa-shield-alt"></i> 99.9%</td>
+                            <td><span class="badge" style="background-color: var(--neutral-600); color: white;">15% improvement</span></td>
                         </tr>
                         <tr>
                             <td><strong>Cost per Quote</strong></td>
-                            <td><i class="fas fa-dollar-sign" style="color: #f59e0b;"></i> $45-60</td>
-                            <td><i class="fas fa-dollar-sign" style="color: #10b981;"></i> $2-3</td>
-                            <td><span class="badge" style="background-color: #10b981; color: white;">95% cost reduction</span></td>
+                            <td><i class="neutral-icon fas fa-dollar-sign"></i> $45-60</td>
+                            <td><i class="neutral-icon fas fa-dollar-sign"></i> $2-3</td>
+                            <td><span class="badge" style="background-color: var(--neutral-600); color: white;">95% cost reduction</span></td>
                         </tr>
                         <tr>
                             <td><strong>Available Hours</strong></td>
-                            <td><i class="fas fa-clock" style="color: #f59e0b;"></i> 8 hours/day</td>
-                            <td><i class="fas fa-clock" style="color: #10b981;"></i> 24/7/365</td>
-                            <td><span class="badge" style="background-color: #10b981; color: white;">300% availability</span></td>
+                            <td><i class="neutral-icon fas fa-clock"></i> 8 hours/day</td>
+                            <td><i class="neutral-icon fas fa-clock"></i> 24/7/365</td>
+                            <td><span class="badge" style="background-color: var(--neutral-600); color: white;">300% availability</span></td>
                         </tr>
                         <tr>
                             <td><strong>Scalability</strong></td>
-                            <td><i class="fas fa-user" style="color: #f59e0b;"></i> Limited by staff</td>
-                            <td><i class="fas fa-infinity" style="color: #10b981;"></i> Unlimited</td>
-                            <td><span class="badge" style="background-color: #10b981; color: white;">Infinite scale</span></td>
+                            <td><i class="neutral-icon fas fa-user"></i> Limited by staff</td>
+                            <td><i class="neutral-icon fas fa-infinity"></i> Unlimited</td>
+                            <td><span class="badge" style="background-color: var(--neutral-600); color: white;">Infinite scale</span></td>
                         </tr>
                         <tr>
                             <td><strong>Data Integration</strong></td>
-                            <td><i class="fas fa-file-alt" style="color: #f59e0b;"></i> Manual lookup</td>
-                            <td><i class="fas fa-cloud-download-alt" style="color: #10b981;"></i> Real-time APIs</td>
-                            <td><span class="badge" style="background-color: #10b981; color: white;">Live data</span></td>
+                            <td><i class="neutral-icon fas fa-file-alt"></i> Manual lookup</td>
+                            <td><i class="neutral-icon fas fa-cloud-download-alt"></i> Real-time APIs</td>
+                            <td><span class="badge" style="background-color: var(--neutral-600); color: white;">Live data</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -387,33 +380,33 @@
             <h2 class="text-center mb-4">Real-Time Data Integration via MCP</h2>
             <div class="row">
                 <div class="col-lg-6 mb-4">
-                    <div class="card bg-dark text-white">
-                        <div class="card-header bg-info">
-                            <h5><i class="bi bi-globe"></i> Live Market Data Sources</h5>
+                    <div class="card process-card">
+                        <div class="card-header">
+                            <h5><i class="neutral-icon fas fa-globe"></i> Live Market Data Sources</h5>
                         </div>
                         <div class="card-body">
                             <ul class="list-unstyled">
-                                <li class="mb-2"><i class="bi bi-fuel-pump text-warning"></i> <strong>Fuel Prices:</strong> Real-time diesel rates by region</li>
-                                <li class="mb-2"><i class="bi bi-hammer text-info"></i> <strong>Labor Costs:</strong> Regional wage data ($52/hr CA, $42/hr TX)</li>
-                                <li class="mb-2"><i class="bi bi-tree text-success"></i> <strong>Materials:</strong> Lumber, foam, steel pricing</li>
-                                <li class="mb-2"><i class="bi bi-truck text-primary"></i> <strong>Carriers:</strong> FedEx, UPS performance metrics</li>
-                                <li class="mb-2"><i class="bi bi-map text-danger"></i> <strong>Routes:</strong> Real-time distance calculations</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-gas-pump"></i> <strong>Fuel Prices:</strong> Real-time diesel rates by region</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-hammer"></i> <strong>Labor Costs:</strong> Regional wage data ($52/hr CA, $42/hr TX)</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-tree"></i> <strong>Materials:</strong> Lumber, foam, steel pricing</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-truck"></i> <strong>Carriers:</strong> FedEx, UPS performance metrics</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-map"></i> <strong>Routes:</strong> Real-time distance calculations</li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-4">
-                    <div class="card bg-dark text-white">
-                        <div class="card-header bg-success">
-                            <h5><i class="bi bi-graph-up"></i> Dynamic Pricing Calculations</h5>
+                    <div class="card process-card">
+                        <div class="card-header">
+                            <h5><i class="neutral-icon fas fa-chart-line"></i> Dynamic Pricing Calculations</h5>
                         </div>
                         <div class="card-body">
                             <ul class="list-unstyled">
-                                <li class="mb-2"><i class="bi bi-calculator text-primary"></i> <strong>Base Freight:</strong> Distance × weight × carrier rates</li>
-                                <li class="mb-2"><i class="bi bi-fuel-pump text-warning"></i> <strong>Fuel Surcharge:</strong> Live regional fuel adjustments</li>
-                                <li class="mb-2"><i class="bi bi-shield text-info"></i> <strong>Insurance:</strong> Value-based coverage calculations</li>
-                                <li class="mb-2"><i class="bi bi-tools text-success"></i> <strong>Handling:</strong> Fragility-based special requirements</li>
-                                <li class="mb-2"><i class="bi bi-clock-history text-danger"></i> <strong>Timeline:</strong> Expedited service premiums</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-calculator"></i> <strong>Base Freight:</strong> Distance × weight × carrier rates</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-gas-pump"></i> <strong>Fuel Surcharge:</strong> Live regional fuel adjustments</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-shield-alt"></i> <strong>Insurance:</strong> Value-based coverage calculations</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-tools"></i> <strong>Handling:</strong> Fragility-based special requirements</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-clock"></i> <strong>Timeline:</strong> Expedited service premiums</li>
                             </ul>
                         </div>
                     </div>
