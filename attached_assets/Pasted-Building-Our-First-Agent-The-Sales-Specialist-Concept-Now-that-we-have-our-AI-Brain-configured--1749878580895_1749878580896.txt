@@ -1,0 +1,49 @@
+Building Our First Agent (The Sales Specialist)
+Concept: Now that we have our "AI Brain" configured, we can hire our first employee. In crewai, an Agent is like a job description for an AI worker. We define its role, its ultimate goal, and its backstory to give it a specific personality and area of expertise. We then give it access to the AI Brain (llm) so it can think.
+
+We will now define our first agent from the blueprint: the SalesBriefingAgent. We'll build its job description to include the responsibility of checking the database.
+
+A Note on the Database: For now, we will tell the agent that it can access the database as part of its goal. The actual technical connection to the database requires a "Tool," which is a more advanced step we can explore after this initial 5-prompt sprint. This prompt focuses on creating the agent's identity.
+
+Step 1: Add the Agent's Code
+Make sure you are in your main.py file in Replit.
+Scroll to the very end of the file.
+Copy the code block below and paste it at the end of your existing code. Do not delete the previous code.
+Python
+
+# --- Step 2: Define The First Agent (The Sales Specialist) ---
+
+# This is the "job description" for our first AI agent.
+sales_briefing_agent = Agent(
+  role='Sales Briefing Specialist',
+  goal="""Gather all necessary shipment details from the user and conduct 
+  an initial customer lookup in the company database. Your goal is to create a 
+  comprehensive 'Shipment Brief' that will be used by the other agents.""",
+  backstory="""You are an expert in customer communication and requirements gathering. 
+  With years of experience in the logistics industry, you know exactly what questions 
+  to ask to capture all critical details about a shipment. You are also proficient 
+  in querying the internal database to check for existing customer profiles and history.""",
+  llm=llm,  # The agent uses the OpenAI brain we configured
+  verbose=True,  # We want to see the agent's thinking process
+  allow_delegation=False # This agent does not delegate tasks to others
+)
+
+# --- Update the Confirmation Message ---
+# We change the print statement to reflect our new progress.
+print("✅ Agent 'Sales Briefing Specialist' is defined and ready!")
+
+Step 2: Update the Final Print Statement
+In the code you just pasted, the final line is a new print() statement. You must now delete the old print statement from the previous step.
+
+Find this line from the previous prompt's code: print("✅ Tech Stack and OpenAI Brain are successfully configured!")
+Delete that entire line. Your file should now end with the new print statement.
+Post-Setup Validation
+Click the big green Run button again.
+
+Because we haven't given our agent a task yet, the program will simply define the agent and print our new confirmation message.
+
+You will know this step was successful if you see the following message in the Console:
+
+✅ Agent 'Sales Briefing Specialist' is defined and ready!
+
+This confirms that the "job description" for our first agent has been loaded and understood by the system.

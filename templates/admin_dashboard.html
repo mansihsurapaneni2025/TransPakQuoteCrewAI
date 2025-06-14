@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TransPak Admin Dashboard</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row">
+            <div class="col-12">
+                <nav class="navbar navbar-expand-lg">
+                    <div class="container">
+                        <a class="navbar-brand" href="{{ url_for('index') }}">
+                            <i class="fas fa-shipping-fast me-2"></i>
+                            TransPak AI Quoter
+                        </a>
+                        <div class="navbar-nav ms-auto">
+                            <a class="nav-link" href="{{ url_for('index') }}">
+                                <i class="fas fa-plus me-1"></i>
+                                New Quote
+                            </a>
+                            <a class="nav-link" href="{{ url_for('list_quotes') }}">
+                                <i class="fas fa-history me-1"></i>
+                                Quote History
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="mb-4">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        System Dashboard
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-box fa-2x text-primary mb-2"></i>
+                            <h3 class="card-title">{{ stats.total_shipments }}</h3>
+                            <p class="card-text text-muted">Total Shipments</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-file-invoice-dollar fa-2x text-success mb-2"></i>
+                            <h3 class="card-title">{{ stats.total_quotes }}</h3>
+                            <p class="card-text text-muted">Generated Quotes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-robot fa-2x text-info mb-2"></i>
+                            <h3 class="card-title">4</h3>
+                            <p class="card-text text-muted">AI Agents Active</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                            <h3 class="card-title">~2min</h3>
+                            <p class="card-text text-muted">Avg. Processing Time</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Recent Quotes -->
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-clock me-2"></i>
+                                Recent Quotes
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if stats.recent_quotes %}
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Shipment</th>
+                                                <th>Route</th>
+                                                <th>Status</th>
+                                                <th>Created</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for quote in stats.recent_quotes %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{{ url_for('view_quote', quote_id=quote.id) }}" class="text-decoration-none">
+                                                        #{{ quote.id }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <small>{{ quote.shipment.item_description[:30] }}{% if quote.shipment.item_description|length > 30 %}...{% endif %}</small>
+                                                </td>
+                                                <td>
+                                                    <small>{{ quote.shipment.origin[:15] }}{% if quote.shipment.origin|length > 15 %}...{% endif %} → {{ quote.shipment.destination[:15] }}{% if quote.shipment.destination|length > 15 %}...{% endif %}</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-primary">{{ quote.status.title() }}</span>
+                                                </td>
+                                                <td>
+                                                    <small>{{ quote.created_at.strftime('%m/%d %H:%M') }}</small>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-end">
+                                    <a href="{{ url_for('list_quotes') }}" class="btn btn-sm btn-outline-primary">
+                                        View All Quotes
+                                    </a>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="fas fa-file-invoice fa-2x text-muted mb-2"></i>
+                                    <p class="text-muted">No quotes generated yet</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Summary -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-chart-pie me-2"></i>
+                                Activity Summary
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if stats.quote_actions %}
+                                {% for action, count in stats.quote_actions %}
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-capitalize">
+                                        <i class="fas fa-{% if action == 'created' %}plus{% elif action == 'viewed' %}eye{% elif action == 'downloaded' %}download{% else %}circle{% endif %} me-1"></i>
+                                        {{ action }}
+                                    </span>
+                                    <span class="badge bg-secondary">{{ count }}</span>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted">No activity recorded yet</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- AI Agents Status -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-robot me-2"></i>
+                                AI Agents Status
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                                    <small>Sales Briefing</small>
+                                    <span class="badge bg-success">Active</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                                    <small>Crating Design</small>
+                                    <span class="badge bg-success">Active</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                                    <small>Logistics Planner</small>
+                                    <span class="badge bg-success">Active</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                                    <small>Quote Consolidator</small>
+                                    <span class="badge bg-success">Active</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
