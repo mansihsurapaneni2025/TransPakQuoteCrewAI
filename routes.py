@@ -262,6 +262,158 @@ def download_quote(quote_id):
         headers={'Content-Disposition': f'attachment; filename=transpak-quote-{quote.id}.txt'}
     )
 
+# API Endpoints for External Integration
+@app.route('/api/v1/quotes', methods=['POST'])
+@jwt_required()
+@limiter.limit("20 per hour")
+def api_generate_quote():
+    """API endpoint for generating quotes programmatically"""
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        
+        if not user or not user.is_active:
+            return jsonify({'error': 'Invalid or inactive user'}), 401
+        
+        data = request.get_json()
+        
+        # Validate API input
+        is_valid, error_message = security.validate_shipment_input(data)
+        if not is_valid:
+            return jsonify({'error': error_message}), 400
+        
+        # Check cache
+        shipment_hash = cache_manager.generate_shipment_hash(data)
+        cached_quote = cache_manager.get_cached_quote(shipment_hash)
+        
+        if cached_quote:
+            return jsonify({
+                'success': True,
+                'quote': cached_quote,
+                'cached': True,
+                'processing_time': 0.1
+            })
+        
+        # Generate new quote
+        start_time = time.time()
+        quote_result = crew_manager.generate_quote(data)
+        processing_time = time.time() - start_time
+        
+        # Cache result
+        cache_manager.cache_quote(shipment_hash, quote_result)
+        cache_manager.update_agent_metrics("api_quote_generation", processing_time, True)
+        
+        # Create database records
+        shipment = Shipment(
+            user_id=user.id,
+            item_description=data['item_description'],
+            dimensions=data['dimensions'],
+            weight=data['weight'],
+            origin=data['origin'],
+            destination=data['destination'],
+            fragility=data.get('fragility', 'Standard'),
+            special_requirements=data.get('special_requirements', ''),
+            timeline=data.get('timeline', '')
+        )
+        db.session.add(shipment)
+        db.session.flush()
+        
+        quote = Quote(
+            shipment_id=shipment.id,
+            quote_content=quote_result,
+            status='generated'
+        )
+        db.session.add(quote)
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'quote_id': quote.id,
+            'shipment_id': shipment.id,
+            'quote': quote_result,
+            'cached': False,
+            'processing_time': processing_time
+        })
+        
+    except Exception as e:
+        cache_manager.update_agent_metrics("api_quote_generation", 0, False)
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/v1/quotes/<int:quote_id>', methods=['GET'])
+@jwt_required()
+def api_get_quote(quote_id):
+    """API endpoint to retrieve a specific quote"""
+    user_id = get_jwt_identity()
+    
+    quote = Quote.query.join(Shipment).filter(
+        Quote.id == quote_id,
+        Shipment.user_id == user_id
+    ).first()
+    
+    if not quote:
+        return jsonify({'error': 'Quote not found'}), 404
+    
+    return jsonify({
+        'success': True,
+        'quote': quote.to_dict(),
+        'shipment': quote.shipment.to_dict()
+    })
+
+@app.route('/api/v1/quotes', methods=['GET'])
+@jwt_required()
+def api_list_quotes():
+    """API endpoint to list user's quotes"""
+    user_id = get_jwt_identity()
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    
+    quotes = Quote.query.join(Shipment).filter(
+        Shipment.user_id == user_id
+    ).order_by(Quote.created_at.desc()).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+    
+    return jsonify({
+        'success': True,
+        'quotes': [quote.to_dict() for quote in quotes.items],
+        'pagination': {
+            'page': page,
+            'per_page': per_page,
+            'total': quotes.total,
+            'pages': quotes.pages
+        }
+    })
+
+# Notification and Webhook System
+@app.route('/api/v1/notifications/webhook', methods=['POST'])
+@limiter.limit("100 per hour")
+def webhook_handler():
+    """Webhook endpoint for external systems"""
+    try:
+        data = request.get_json()
+        event_type = data.get('event_type')
+        
+        if event_type == 'quote_accepted':
+            quote_id = data.get('quote_id')
+            quote = Quote.query.get(quote_id)
+            if quote:
+                quote.status = 'accepted'
+                db.session.commit()
+                
+                # Log the event
+                history = QuoteHistory(
+                    quote_id=quote_id,
+                    action='accepted_via_webhook',
+                    user_info={'webhook_source': data.get('source', 'unknown')}
+                )
+                db.session.add(history)
+                db.session.commit()
+        
+        return jsonify({'success': True})
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/admin')
 def admin_dashboard():
     """

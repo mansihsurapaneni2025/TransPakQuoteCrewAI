@@ -1,14 +1,17 @@
 import os
 import json
 import logging
+import time
 from crewai import Crew, Process
 from agents import TransPakAgents
 from tasks import TransPakTasks
+from ai_enhancements import AIEnhancementEngine
 
 class TransPakCrewManager:
     def __init__(self):
         self.agents = TransPakAgents()
         self.tasks = TransPakTasks()
+        self.ai_engine = AIEnhancementEngine()
         logging.basicConfig(level=logging.DEBUG)
         self.logger = logging.getLogger(__name__)
     

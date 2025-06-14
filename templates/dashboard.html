@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - TransPak AI Quoter</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 0;
+        }
+        .navbar-brand {
+            color: white !important;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+        }
+        .nav-link:hover {
+            color: white !important;
+        }
+        .dashboard-header {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .stats-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #667eea;
+        }
+        .shipment-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('dashboard') }}">TransPak AI</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('index') }}">New Quote</a>
+                <a class="nav-link" href="{{ url_for('list_quotes') }}">All Quotes</a>
+                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="dashboard-header">
+            <h1>Welcome back, {{ current_user.contact_name }}!</h1>
+            <p class="text-muted mb-0">{{ current_user.company_name }} • {{ current_user.email }}</p>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number">{{ shipments|length }}</div>
+                    <div class="text-muted">Recent Shipments</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number">{{ shipments|selectattr('quotes')|list|length }}</div>
+                    <div class="text-muted">Generated Quotes</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number">{{ current_user.api_key[:8] }}...</div>
+                    <div class="text-muted">API Key</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">New Quote</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <h3>Recent Shipments</h3>
+                {% if shipments %}
+                    {% for shipment in shipments %}
+                        <div class="shipment-card">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5>{{ shipment.item_description }}</h5>
+                                    <p class="text-muted mb-1">
+                                        <strong>Route:</strong> {{ shipment.origin }} → {{ shipment.destination }}
+                                    </p>
+                                    <p class="text-muted mb-1">
+                                        <strong>Dimensions:</strong> {{ shipment.dimensions }} • 
+                                        <strong>Weight:</strong> {{ shipment.weight }}
+                                    </p>
+                                    <small class="text-muted">Created: {{ shipment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    {% if shipment.quotes %}
+                                        <span class="badge bg-success mb-2">{{ shipment.quotes|length }} Quote(s)</span><br>
+                                        <a href="{{ url_for('view_quote', quote_id=shipment.quotes[0].id) }}" class="btn btn-outline-primary btn-sm">View Quote</a>
+                                    {% else %}
+                                        <span class="badge bg-warning mb-2">No Quotes</span><br>
+                                        <form method="POST" action="{{ url_for('generate_quote') }}" style="display: inline;">
+                                            <input type="hidden" name="item_description" value="{{ shipment.item_description }}">
+                                            <input type="hidden" name="dimensions" value="{{ shipment.dimensions }}">
+                                            <input type="hidden" name="weight" value="{{ shipment.weight }}">
+                                            <input type="hidden" name="origin" value="{{ shipment.origin }}">
+                                            <input type="hidden" name="destination" value="{{ shipment.destination }}">
+                                            <input type="hidden" name="fragility" value="{{ shipment.fragility }}">
+                                            <input type="hidden" name="special_requirements" value="{{ shipment.special_requirements }}">
+                                            <input type="hidden" name="timeline" value="{{ shipment.timeline }}">
+                                            <button type="submit" class="btn btn-primary btn-sm">Generate Quote</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <h5 class="text-muted">No shipments yet</h5>
+                        <p>Start by creating your first quote</p>
+                        <a href="{{ url_for('index') }}" class="btn btn-primary">Create Quote</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
