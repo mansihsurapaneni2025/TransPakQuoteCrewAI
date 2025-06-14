@@ -11,6 +11,7 @@ from models import Shipment, Quote, QuoteHistory, User
 from security_middleware import SecurityMiddleware
 from cache_manager import CacheManager
 from analytics_dashboard import analytics_bp
+from monitoring_config import system_monitor, get_deployment_readiness
 
 # Initialize extensions
 login_manager = LoginManager()
