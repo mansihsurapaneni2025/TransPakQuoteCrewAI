@@ -1,0 +1,33 @@
+You are an expert crewAI developer. Your task is to write a complete, single-file Python script named main.py that functions as an interactive command-line tool.
+
+This script will automate the TransPak shipment quoting process by gathering live input from the user.
+
+The script must be structured as follows:
+
+Setup: Import all necessary libraries (os, crewai, langchain_openai). Securely load an OPENAI_API_KEY from environment variables and initialize a ChatOpenAI instance using the gpt-4o-mini model.
+Define a Crew of Four Agents: You must create four distinct agents, each with a specific role, goal, and backstory. The agents are:
+Sales Briefing Agent: Gathers and structures shipment details.
+Crating Design Agent: Acts as a packaging engineer to estimate crating costs.
+Logistics Planner Agent: Acts as a shipping expert to estimate freight costs.
+Quote Consolidator Agent: Acts as a project manager to assemble the final quote.
+Define a Sequence of Four Tasks: You must create four tasks, each corresponding to an agent. The tasks must be designed to pass context sequentially. Crucially, the first task (briefing) must be written to accept a variable containing the shipment details.
+Create an Interactive Input Function: Before defining the tasks, create a Python function called get_shipment_details(). This function will:
+Print a welcome message to the user.
+Prompt the user to enter each piece of shipment information one by one from the command line (Item Description, Dimensions, Weight, Origin, Destination, Fragility, Special Requirements).
+Collect these inputs and format them into a single, comprehensive string.
+Return this string.
+Main Execution Block: Use a standard if __name__ == "__main__": block to control the script's execution. Inside this block, you will:
+First, call the get_shipment_details() function to get the live data from the user.
+Then, use the returned data to populate the description for the first task.
+Finally, assemble the agents and tasks into a sequential Crew and .kickoff() the process.
+Output: Print the final markdown string result from the QuoteConsolidatorAgent to the console."
+How We Arrived at This Prompt
+This prompt is more advanced because it builds a reusable tool, not just a one-off script. Here’s what makes it effective:
+
+Separation of Concerns: By asking for an Interactive Input Function, we are telling the AI to separate the "data gathering" logic from the "AI processing" logic. This is a fundamental concept in good software design.
+
+Clear Execution Flow: Specifying the use of an if __name__ == "__main__": block is key. It tells the AI to create a proper, runnable script. In Python, this block is the standard way to define the main entry point of a program, ensuring that the interactive prompts and the crew kickoff only happen when the file is run directly.
+
+Dynamic Task Instantiation: We explicitly state that the first task's description should be populated by the result of the input function. This teaches the AI to connect the two pieces of logic, making the Crew's workload dependent on the user's live input.
+
+User-Centric Design: The entire prompt is now framed around creating a tool for a user. This shifts the focus from a developer's test to a functional application, which naturally leads to a better-structured and more useful final product.

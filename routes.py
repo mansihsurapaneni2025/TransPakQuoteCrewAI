@@ -170,14 +170,9 @@ def generate_quote():
         db.session.add(shipment)
         db.session.commit()
         
-        # Generate quote using AI agents
-        result = crew_manager.generate_quote(shipment_info)
-        
-        if result.get('success', True):
-            # Extract quote content - handle both old and new formats
-            quote_content = result.get('quote', str(result))
-            if isinstance(quote_content, dict):
-                quote_content = quote_content.get('quote_content', str(quote_content))
+        # Generate quote using AI agents - simplified approach
+        try:
+            quote_content = crew_manager.generate_simple_quote(shipment_info)
             
             # Save quote to database
             quote = Quote(
@@ -201,9 +196,10 @@ def generate_quote():
                                  quote=quote_content, 
                                  shipment_info=shipment_info,
                                  quote_id=quote.id)
-        else:
-            error_message = result.get('message', 'Unknown error occurred')
-            flash(f"Error generating quote: {error_message}", 'error')
+        
+        except Exception as quote_error:
+            logger.error(f"Quote generation failed: {str(quote_error)}")
+            flash("Quote generation is currently unavailable. Please try again later.", 'error')
             return render_template('index.html', form_data=shipment_info)
             
     except Exception as e:
