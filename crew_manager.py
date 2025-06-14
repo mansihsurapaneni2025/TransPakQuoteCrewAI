@@ -133,6 +133,10 @@ class TransPakCrewManager:
             shipment_info.get('special_requirements', '')
         )
         
+        # Get real-time market data
+        market_data = self.market_data.get_commodity_prices()
+        carrier_performance = self.market_data.get_carrier_performance_data()
+        
         return {
             'sales_briefing': {
                 'task': 'Validated shipment information and identified requirements',
@@ -142,13 +146,15 @@ class TransPakCrewManager:
                     f"Assessed fragility level: {shipment_info.get('fragility', 'Standard')}",
                     f"Reviewed special requirements: {shipment_info.get('special_requirements') or 'None specified'}"
                 ],
-                'output': 'Comprehensive shipment briefing for packaging and logistics teams'
+                'output': 'Comprehensive shipment briefing for packaging and logistics teams',
+                'market_context': f"Current labor index: {market_data.get('labor_index_multiplier', 1.0)}"
             },
             'packaging_engineering': {
                 'task': f"Designed optimal packaging solution for {shipment_info.get('fragility', 'Standard')} fragility items",
                 'calculations': [
                     f"Volume calculation: {packaging_data.get('volume_cubic_feet', 0)} cubic feet",
                     f"Complexity factor: {packaging_data.get('complexity_factor', 1.0)}",
+                    f"Labor rate applied: ${packaging_data.get('real_labor_rate', 45)}/hour",
                     f"Estimated labor: {packaging_data.get('estimated_labor_hours', 0)} hours"
                 ],
                 'cost_components': {
@@ -156,21 +162,25 @@ class TransPakCrewManager:
                     'protective_cushioning': packaging_data.get('special_requirements', 0),
                     'assembly_labor': packaging_data.get('assembly_labor', 0),
                     'total': packaging_data.get('total_packaging_cost', 0)
-                }
+                },
+                'market_data': f"Wood: ${market_data.get('wood_lumber_per_bf', 1.2)}/bf, Foam: ${market_data.get('foam_materials_per_cf', 15.5)}/cf"
             },
             'logistics_planning': {
                 'task': f"Route planning from {shipment_info.get('origin', 'N/A')} to {shipment_info.get('destination', 'N/A')}",
                 'analysis': [
-                    f"Distance factor: {shipping_data.get('distance_factor', 1.0)}",
+                    f"Route distance: {route_data.get('distance_miles', 0)} miles",
+                    f"Transit time: {route_data.get('estimated_transit_days', 0)} days",
+                    f"Route complexity: {route_data.get('route_difficulty', 1.0)}",
                     f"Billable weight: {shipping_data.get('billable_weight', 0)} lbs",
-                    f"Fragility multiplier: {shipping_data.get('fragility_multiplier', 1.0)}"
+                    f"Real fuel rate: {shipping_data.get('real_fuel_rate', 0.18):.3f}"
                 ],
                 'cost_components': {
                     'base_freight': shipping_data.get('base_freight_cost', 0),
                     'fuel_surcharge': shipping_data.get('fuel_surcharge', 0),
                     'fragile_handling': shipping_data.get('fragile_handling_fee', 0),
                     'total': shipping_data.get('total_transportation_cost', 0)
-                }
+                },
+                'carrier_analysis': f"FedEx performance: {carrier_performance.get('FedEx', {}).get('on_time_delivery', 0.96):.1%} on-time"
             },
             'quote_consolidation': {
                 'task': 'Consolidated all cost components into comprehensive quote',
@@ -183,22 +193,24 @@ class TransPakCrewManager:
                     'loading_unloading': handling_data.get('loading_unloading_service', 0),
                     'coordination_tracking': handling_data.get('coordination_tracking', 0),
                     'total': handling_data.get('total_special_handling', 0)
-                }
+                },
+                'calculation_timestamp': shipping_data.get('calculation_timestamp', 'N/A')
             }
         }
     
     def _calculate_cost_breakdown(self, shipment_info):
-        """Calculate detailed cost breakdown using real pricing algorithms"""
+        """Calculate detailed cost breakdown using enhanced real-time pricing"""
         
-        # Get dynamic pricing calculations
-        packaging_data = pricing_tools.calculate_packaging_cost(
+        # Use enhanced pricing engine with real-time data
+        packaging_data = self.enhanced_pricing.calculate_enhanced_packaging_cost(
             shipment_info.get('dimensions', '48x36x24'),
             shipment_info.get('weight', '350'),
             shipment_info.get('fragility', 'Standard'),
-            shipment_info.get('item_description', 'Industrial equipment')
+            shipment_info.get('item_description', 'Industrial equipment'),
+            shipment_info.get('origin', 'San Jose CA')
         )
         
-        shipping_data = pricing_tools.calculate_shipping_rate(
+        shipping_data = self.enhanced_pricing.calculate_enhanced_shipping_rate(
             shipment_info.get('origin', 'San Jose CA'),
             shipment_info.get('destination', 'Austin TX'),
             shipment_info.get('weight', '350'),
@@ -219,13 +231,13 @@ class TransPakCrewManager:
             shipment_info.get('special_requirements', '')
         )
         
-        # Extract totals from calculations
+        # Extract totals from enhanced calculations
         packaging_total = packaging_data.get('total_packaging_cost', 0)
         transportation_total = shipping_data.get('total_transportation_cost', 0)
         insurance_total = insurance_data.get('total_insurance_documentation', 0)
         handling_total = handling_data.get('total_special_handling', 0)
         
-        # Calculate final total
+        # Calculate final total with real-time adjustments
         grand_total = packaging_total + transportation_total + insurance_total + handling_total
         
         return {
@@ -233,7 +245,10 @@ class TransPakCrewManager:
             'transportation': round(transportation_total, 2),
             'insurance_documentation': round(insurance_total, 2),
             'special_handling': round(handling_total, 2),
-            'total': round(grand_total, 2)
+            'total': round(grand_total, 2),
+            'calculation_method': 'enhanced_real_time',
+            'fuel_rate_applied': shipping_data.get('real_fuel_rate', 0.18),
+            'labor_rate_applied': packaging_data.get('real_labor_rate', 45)
         }
     
     def generate_simple_quote(self, shipment_info):
