@@ -149,12 +149,15 @@ def generate_quote():
             'timeline': request.form.get('timeline', '').strip()
         }
         
+        # Initialize direct quote generator
+        quote_generator = DirectQuoteGenerator()
+        
         logger.info(f"Received quote request: {shipment_info}")
         
         # Validate input
-        validation = crew_manager.validate_shipment_info(shipment_info)
-        if not validation['valid']:
-            flash(f"Please provide the following required information: {', '.join(validation['missing_fields'])}", 'error')
+        validation, missing_fields = quote_generator.validate_shipment_info(shipment_info)
+        if not validation:
+            flash(f"Please provide the following required information: {', '.join(missing_fields)}", 'error')
             return render_template('index.html', form_data=shipment_info)
         
         # Save shipment to database
@@ -173,10 +176,10 @@ def generate_quote():
         
         # Generate quote using AI agents with full traceability
         try:
-            result = crew_manager.generate_quote(shipment_info)
+            result = quote_generator.generate_quote(shipment_info)
             
             if result['success']:
-                quote_content = result['quote']
+                quote_content = result['quote_content']
                 agent_activity = result.get('agent_activity', {})
                 cost_breakdown = result.get('cost_breakdown', {})
                 
