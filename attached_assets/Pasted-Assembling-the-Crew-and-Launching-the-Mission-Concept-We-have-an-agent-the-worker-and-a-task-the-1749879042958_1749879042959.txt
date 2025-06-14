@@ -1,0 +1,47 @@
+Assembling the Crew and Launching the Mission
+Concept: We have an agent (the worker) and a task (the assignment). Now, we need a manager to put them together and give the final "Go!" command. In crewai, this manager is called the Crew.
+
+The Crew takes our list of agents and tasks and tells them to start working. The .kickoff() method is the official start of the mission. This is the step that will finally make our agent execute the task.
+
+Step 1: Add the Final Code to Launch the Crew
+Go to your main.py file in Replit.
+Scroll to the very end of the file.
+Copy the final code block below and paste it at the end of your existing code.
+Python
+
+# --- Step 4: Assemble the Crew and Kick Off the Process ---
+
+# Create a Crew, which is the "manager" that brings agents and tasks together.
+# For this first version, our crew has only one agent and one task.
+transpak_crew = Crew(
+  agents=[sales_briefing_agent], # A list of all agents in the crew
+  tasks=[shipment_briefing_task], # A list of all tasks to be done
+  process=Process.sequential,  # Tasks will be executed one after another
+  verbose=2 # We want to see all the details of the agent's work
+)
+
+# This is the command that starts the entire process.
+# The agent will now execute the task we gave it.
+print("\n--- 🚀 KICKING OFF THE CREW... ---\n")
+result = transpak_crew.kickoff()
+
+print("\n\n--- ✅ MISSION COMPLETE! HERE IS THE RESULT: ---\n")
+print(result)
+
+Step 2: Remove the Final Print Statement
+This is the last time we'll need to do this. We are now running the full process, so we don't need a simple confirmation message anymore.
+
+Find this line from the previous prompt's code: print("✅ Task 'Shipment Briefing Task' is created and assigned!")
+Delete that entire line. Your file should now end with the code block you just pasted.
+Post-Setup Validation: The "Magic" Moment
+Click the big green Run button.
+
+This time, something very different will happen. You will not get an instant message. Instead, you will see a lot of text appear in the Console as the AI agent "thinks" out loud. You will see it:
+
+Read its goal and the task.
+Formulate a plan.
+Execute the plan (which, in this case, is to format the provided text).
+Finally, present its result.
+The process might take 20-40 seconds. You will know it is successful when the process stops and you see the final, formatted Shipment Brief printed at the very end, under the "MISSION COMPLETE!" banner.
+
+This is the proof-of-concept you set out to build. Congratulations!
