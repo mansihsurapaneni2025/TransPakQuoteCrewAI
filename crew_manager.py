@@ -9,6 +9,7 @@ import pricing_tools
 import json
 from ai_enhancements import AIEnhancementEngine
 from agent_memory import AgentMemoryCapture, MCPConnector
+from enhanced_pricing_engine import EnhancedPricingEngine, RealTimeMarketData, GeolocationService
 
 class TransPakCrewManager:
     def __init__(self):
@@ -17,6 +18,9 @@ class TransPakCrewManager:
         self.ai_engine = AIEnhancementEngine()
         self.agent_memory = AgentMemoryCapture()
         self.mcp_connector = MCPConnector()
+        self.enhanced_pricing = EnhancedPricingEngine()
+        self.market_data = RealTimeMarketData()
+        self.geolocation = GeolocationService()
         logging.basicConfig(level=logging.DEBUG)
         self.logger = logging.getLogger(__name__)
     
@@ -90,21 +94,28 @@ class TransPakCrewManager:
     def _extract_agent_activity(self, crew, shipment_info):
         """Extract real agent activity data using dynamic pricing calculations"""
         
-        # Calculate real packaging costs
-        packaging_data = pricing_tools.calculate_packaging_cost(
+        # Calculate enhanced packaging costs with real-time data
+        packaging_data = self.enhanced_pricing.calculate_enhanced_packaging_cost(
             shipment_info.get('dimensions', '48x36x24'),
             shipment_info.get('weight', '350'),
             shipment_info.get('fragility', 'Standard'),
-            shipment_info.get('item_description', 'Industrial equipment')
+            shipment_info.get('item_description', 'Industrial equipment'),
+            shipment_info.get('origin', 'San Jose CA')
         )
         
-        # Calculate real shipping costs
-        shipping_data = pricing_tools.calculate_shipping_rate(
+        # Calculate enhanced shipping costs with real-time data
+        shipping_data = self.enhanced_pricing.calculate_enhanced_shipping_rate(
             shipment_info.get('origin', 'San Jose CA'),
             shipment_info.get('destination', 'Austin TX'),
             shipment_info.get('weight', '350'),
             shipment_info.get('dimensions', '48x36x24'),
             shipment_info.get('fragility', 'Standard')
+        )
+        
+        # Get real geolocation data
+        route_data = self.geolocation.calculate_real_distance(
+            shipment_info.get('origin', 'San Jose CA'),
+            shipment_info.get('destination', 'Austin TX')
         )
         
         # Calculate real insurance costs
