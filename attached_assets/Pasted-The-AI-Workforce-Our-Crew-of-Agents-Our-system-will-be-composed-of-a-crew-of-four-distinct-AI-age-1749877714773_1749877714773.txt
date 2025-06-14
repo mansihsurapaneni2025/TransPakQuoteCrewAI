@@ -1,0 +1,56 @@
+The AI Workforce: Our Crew of Agents
+Our system will be composed of a "crew" of four distinct AI agents, each with a specialized role:
+
+Sales Briefing Agent: This agent's job is to interact with the user (the salesperson) to gather all the required details about the shipment (e.g., dimensions, weight, destination, fragility, special requirements).
+
+Crating Design Agent: This agent acts as a virtual packaging engineer. It takes the shipment details and designs the most effective and cost-efficient crating solution.
+
+Logistics Planner Agent: This agent is the shipping expert. It determines the best transportation routes, calculates freight costs, and considers any compliance or customs issues.
+
+Quote Consolidator Agent: This is the project manager. It takes the cost information from the Crating and Logistics agents, applies TransPak's business rules (like profit margins), and assembles the final, professional quote document for the customer.
+
+4. Project Setup Guide: Your First Steps
+Follow these instructions exactly to build the foundation for our project in Replit.
+
+Part A: Pre-requisites
+All you need to start is a web browser and a free Replit account. No software installation is necessary.
+
+Part B: Step-by-Step Instructions
+
+Create the Replit Project:
+
+Go to Replit.com and log in.
+
+Click the + Create Repl button (top-left).
+
+In the search box, type Python and select the Python template.
+
+For the Title, name your project exactly: TransPak-AI-Quoter
+
+Click the + Create Repl button at the bottom. Wait for the environment to finish loading.
+
+Install the Required Library:
+
+On the right side of the screen, find the window with the black background and click on the Shell tab.
+
+A command prompt (>  or $ ) will appear.
+
+Carefully copy the command below, paste it into the Shell, and press Enter:
+
+pip install 'crewai[tools]'
+
+Wait patiently. This command will install the crewai framework and all its necessary tools. It may take 1-2 minutes.
+
+Part C: Folder Structure Guidelines
+For now, we will write all our code in the main.py file. As our project grows more complex in later prompts, we will organize our code by creating new files (e.g., agents.py, tasks.py) to keep everything clean and manageable. Do not worry about this now; I will guide you when the time comes.
+
+5. Post-Setup Validation: Your Checklist
+Before we can move to the next prompt, you must confirm that your setup was successful. Please verify that you can answer "Yes" to all of the following questions:
+
+[ ] Is your Replit project created with the exact name TransPak-AI-Quoter?
+
+[ ] After running the pip install command in the Shell, did the process complete and show a message similar to Successfully installed ...?
+
+[ ] Do you see two new files, pyproject.toml and poetry.lock, in your Files list on the left?
+
+[ ] Are you now looking at a fresh, empty command prompt (> ) in the Shell window?
