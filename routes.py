@@ -214,7 +214,7 @@ def health_check():
     except Exception as e:
         health_status = {
             'status': 'unhealthy',
-            'timestamp': datetime.utcnow().isoformat(),
+            'timestamp': datetime.now().isoformat(),
             'error': str(e),
             'services': {
                 'database': 'error',
