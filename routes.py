@@ -170,32 +170,47 @@ def generate_quote():
         db.session.add(shipment)
         db.session.commit()
         
-        # Generate quote using AI agents - simplified approach
+        # Generate quote using AI agents with full traceability
         try:
-            quote_content = crew_manager.generate_simple_quote(shipment_info)
+            result = crew_manager.generate_quote(shipment_info)
             
-            # Save quote to database
-            quote = Quote(
-                shipment_id=shipment.id,
-                quote_content=str(quote_content),
-                status='generated'
-            )
-            db.session.add(quote)
-            db.session.commit()
-            
-            # Track quote creation
-            history = QuoteHistory(
-                quote_id=quote.id,
-                action='created',
-                user_info={'user_agent': request.headers.get('User-Agent', '')}
-            )
-            db.session.add(history)
-            db.session.commit()
-            
-            return render_template('quote_result.html', 
-                                 quote=quote_content, 
-                                 shipment_info=shipment_info,
-                                 quote_id=quote.id)
+            if result['success']:
+                quote_content = result['quote']
+                agent_activity = result.get('agent_activity', {})
+                cost_breakdown = result.get('cost_breakdown', {})
+                
+                # Save quote to database
+                quote = Quote(
+                    shipment_id=shipment.id,
+                    quote_content=str(quote_content),
+                    status='generated'
+                )
+                quote.set_agent_results({
+                    'agent_activity': agent_activity,
+                    'cost_breakdown': cost_breakdown
+                })
+                db.session.add(quote)
+                db.session.commit()
+                
+                # Track quote creation
+                history = QuoteHistory(
+                    quote_id=quote.id,
+                    action='created',
+                    user_info={'user_agent': request.headers.get('User-Agent', '')}
+                )
+                db.session.add(history)
+                db.session.commit()
+                
+                return render_template('quote_result.html', 
+                                     quote=quote_content, 
+                                     shipment_info=shipment_info,
+                                     agent_activity=agent_activity,
+                                     cost_breakdown=cost_breakdown,
+                                     quote_id=quote.id)
+            else:
+                logger.error(f"Quote generation failed: {result['message']}")
+                flash("Quote generation failed. Please try again.", 'error')
+                return render_template('index.html', form_data=shipment_info)
         
         except Exception as quote_error:
             logger.error(f"Quote generation failed: {str(quote_error)}")

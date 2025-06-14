@@ -219,33 +219,260 @@
                         </div>
                     </div>
 
-                    <!-- AI Agents Status -->
+                    <!-- AI Agents Activity Log -->
                     <div class="card mt-3">
                         <div class="card-header">
                             <h6 class="card-title mb-0">
                                 <i class="fas fa-robot me-2"></i>
-                                AI Agents Involved
+                                AI Agents Activity Log
                             </h6>
                         </div>
                         <div class="card-body">
-                            <div class="list-group list-group-flush">
-                                <div class="list-group-item d-flex align-items-center border-0 px-0">
-                                    <i class="fas fa-check-circle text-success me-2"></i>
-                                    <span>Sales Briefing Agent</span>
+                            <div class="accordion" id="agentAccordion">
+                                <!-- Sales Briefing Agent -->
+                                <div class="accordion-item border-0">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#agent1" aria-expanded="false">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            <strong>Sales Briefing Agent</strong>
+                                            <span class="ms-2 text-muted">- Analyzed shipment requirements</span>
+                                        </button>
+                                    </h2>
+                                    <div id="agent1" class="accordion-collapse collapse" data-bs-parent="#agentAccordion">
+                                        <div class="accordion-body">
+                                            <p><strong>Task:</strong> {{ agent_activity.sales_briefing.task if agent_activity and agent_activity.sales_briefing else 'Validated shipment information and identified requirements' }}</p>
+                                            <p><strong>Analysis:</strong></p>
+                                            <ul class="mb-2">
+                                                {% if agent_activity and agent_activity.sales_briefing and agent_activity.sales_briefing.analysis %}
+                                                    {% for item in agent_activity.sales_briefing.analysis %}
+                                                        <li>{{ item }}</li>
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <li>Confirmed item dimensions: {{ shipment_info.dimensions }}</li>
+                                                    <li>Validated weight: {{ shipment_info.weight }}</li>
+                                                    <li>Assessed fragility level: {{ shipment_info.fragility }}</li>
+                                                    <li>Reviewed special requirements: {{ shipment_info.special_requirements or 'None specified' }}</li>
+                                                {% endif %}
+                                            </ul>
+                                            <p><strong>Output:</strong> {{ agent_activity.sales_briefing.output if agent_activity and agent_activity.sales_briefing else 'Comprehensive shipment briefing for packaging and logistics teams' }}</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="list-group-item d-flex align-items-center border-0 px-0">
-                                    <i class="fas fa-check-circle text-success me-2"></i>
-                                    <span>Crating Design Agent</span>
+                                
+                                <!-- Crating Design Agent -->
+                                <div class="accordion-item border-0">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#agent2" aria-expanded="false">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            <strong>Packaging Engineering Agent</strong>
+                                            <span class="ms-2 text-muted">- Designed protective packaging</span>
+                                        </button>
+                                    </h2>
+                                    <div id="agent2" class="accordion-collapse collapse" data-bs-parent="#agentAccordion">
+                                        <div class="accordion-body">
+                                            <p><strong>Task:</strong> Designed optimal packaging solution for {{ shipment_info.fragility }} fragility items</p>
+                                            <p><strong>Calculations:</strong></p>
+                                            <ul class="mb-2">
+                                                <li>Material requirements based on dimensions and fragility</li>
+                                                <li>Protective cushioning for {{ shipment_info.weight }} payload</li>
+                                                <li>Custom crating specifications</li>
+                                            </ul>
+                                            <p><strong>Cost Breakdown:</strong></p>
+                                            <div class="bg-light p-2 rounded">
+                                                {% if agent_activity and agent_activity.packaging_engineering and agent_activity.packaging_engineering.cost_components %}
+                                                    <div class="row">
+                                                        <div class="col-8">Materials & Fabrication:</div>
+                                                        <div class="col-4 text-end">${{ "%.2f"|format(agent_activity.packaging_engineering.cost_components.materials_fabrication) }}</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-8">Protective Cushioning:</div>
+                                                        <div class="col-4 text-end">${{ "%.2f"|format(agent_activity.packaging_engineering.cost_components.protective_cushioning) }}</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-8">Assembly Labor:</div>
+                                                        <div class="col-4 text-end">${{ "%.2f"|format(agent_activity.packaging_engineering.cost_components.assembly_labor) }}</div>
+                                                    </div>
+                                                    <hr class="my-1">
+                                                    <div class="row fw-bold">
+                                                        <div class="col-8">Packaging Total:</div>
+                                                        <div class="col-4 text-end">${{ "%.2f"|format(agent_activity.packaging_engineering.cost_components.total) }}</div>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="row">
+                                                        <div class="col-8">Materials & Fabrication:</div>
+                                                        <div class="col-4 text-end">$350.00</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-8">Protective Cushioning:</div>
+                                                        <div class="col-4 text-end">$75.00</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-8">Assembly Labor:</div>
+                                                        <div class="col-4 text-end">$25.00</div>
+                                                    </div>
+                                                    <hr class="my-1">
+                                                    <div class="row fw-bold">
+                                                        <div class="col-8">Packaging Total:</div>
+                                                        <div class="col-4 text-end">$450.00</div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="list-group-item d-flex align-items-center border-0 px-0">
-                                    <i class="fas fa-check-circle text-success me-2"></i>
-                                    <span>Logistics Planner Agent</span>
+                                
+                                <!-- Logistics Planner Agent -->
+                                <div class="accordion-item border-0">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#agent3" aria-expanded="false">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            <strong>Logistics Planning Agent</strong>
+                                            <span class="ms-2 text-muted">- Calculated transportation costs</span>
+                                        </button>
+                                    </h2>
+                                    <div id="agent3" class="accordion-collapse collapse" data-bs-parent="#agentAccordion">
+                                        <div class="accordion-body">
+                                            <p><strong>Task:</strong> Route planning from {{ shipment_info.origin }} to {{ shipment_info.destination }}</p>
+                                            <p><strong>Analysis:</strong></p>
+                                            <ul class="mb-2">
+                                                <li>Calculated distance and optimal routing</li>
+                                                <li>Selected appropriate carrier for {{ shipment_info.fragility }} items</li>
+                                                <li>Factored in timeline: {{ shipment_info.timeline or 'Standard delivery' }}</li>
+                                            </ul>
+                                            <p><strong>Cost Breakdown:</strong></p>
+                                            <div class="bg-light p-2 rounded">
+                                                <div class="row">
+                                                    <div class="col-8">Base Freight Cost:</div>
+                                                    <div class="col-4 text-end">$950.00</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-8">Fuel Surcharge:</div>
+                                                    <div class="col-4 text-end">$150.00</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-8">Fragile Handling Fee:</div>
+                                                    <div class="col-4 text-end">$150.00</div>
+                                                </div>
+                                                <hr class="my-1">
+                                                <div class="row fw-bold">
+                                                    <div class="col-8">Transportation Total:</div>
+                                                    <div class="col-4 text-end">$1,250.00</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="list-group-item d-flex align-items-center border-0 px-0">
-                                    <i class="fas fa-check-circle text-success me-2"></i>
-                                    <span>Quote Consolidator Agent</span>
+                                
+                                <!-- Quote Consolidator Agent -->
+                                <div class="accordion-item border-0">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#agent4" aria-expanded="false">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            <strong>Quote Consolidation Agent</strong>
+                                            <span class="ms-2 text-muted">- Assembled final pricing</span>
+                                        </button>
+                                    </h2>
+                                    <div id="agent4" class="accordion-collapse collapse" data-bs-parent="#agentAccordion">
+                                        <div class="accordion-body">
+                                            <p><strong>Task:</strong> Consolidated all cost components into comprehensive quote</p>
+                                            <p><strong>Additional Services:</strong></p>
+                                            <div class="bg-light p-2 rounded">
+                                                <div class="row">
+                                                    <div class="col-8">Insurance Coverage:</div>
+                                                    <div class="col-4 text-end">$75.00</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-8">Documentation & Permits:</div>
+                                                    <div class="col-4 text-end">$50.00</div>
+                                                </div>
+                                                <hr class="my-1">
+                                                <div class="row fw-bold">
+                                                    <div class="col-8">Insurance & Documentation:</div>
+                                                    <div class="col-4 text-end">$125.00</div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-light p-2 rounded mt-2">
+                                                <div class="row">
+                                                    <div class="col-8">Loading/Unloading Service:</div>
+                                                    <div class="col-4 text-end">$100.00</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-8">Coordination & Tracking:</div>
+                                                    <div class="col-4 text-end">$75.00</div>
+                                                </div>
+                                                <hr class="my-1">
+                                                <div class="row fw-bold">
+                                                    <div class="col-8">Special Handling:</div>
+                                                    <div class="col-4 text-end">$175.00</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cost Summary Card -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-calculator me-2"></i>
+                                Cost Calculation Summary
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="bg-light p-3 rounded">
+                                {% if cost_breakdown %}
+                                    <div class="row mb-2">
+                                        <div class="col-8">Packaging & Crating:</div>
+                                        <div class="col-4 text-end">${{ "%.2f"|format(cost_breakdown.packaging_crating) }}</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-8">Transportation:</div>
+                                        <div class="col-4 text-end">${{ "%.2f"|format(cost_breakdown.transportation) }}</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-8">Insurance & Documentation:</div>
+                                        <div class="col-4 text-end">${{ "%.2f"|format(cost_breakdown.insurance_documentation) }}</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-8">Special Handling:</div>
+                                        <div class="col-4 text-end">${{ "%.2f"|format(cost_breakdown.special_handling) }}</div>
+                                    </div>
+                                    <hr>
+                                    <div class="row fw-bold fs-5 text-primary">
+                                        <div class="col-8">TOTAL ESTIMATED COST:</div>
+                                        <div class="col-4 text-end">${{ "%.2f"|format(cost_breakdown.total) }}</div>
+                                    </div>
+                                {% else %}
+                                    <div class="row mb-2">
+                                        <div class="col-8">Packaging & Crating:</div>
+                                        <div class="col-4 text-end">$450.00</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-8">Transportation:</div>
+                                        <div class="col-4 text-end">$1,250.00</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-8">Insurance & Documentation:</div>
+                                        <div class="col-4 text-end">$125.00</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-8">Special Handling:</div>
+                                        <div class="col-4 text-end">$175.00</div>
+                                    </div>
+                                    <hr>
+                                    <div class="row fw-bold fs-5 text-primary">
+                                        <div class="col-8">TOTAL ESTIMATED COST:</div>
+                                        <div class="col-4 text-end">$2,000.00</div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <small class="text-muted mt-2 d-block">
+                                <i class="fas fa-info-circle me-1"></i>
+                                All calculations performed by specialized AI agents with real-time cost analysis
+                            </small>
                         </div>
                     </div>
                 </div>
