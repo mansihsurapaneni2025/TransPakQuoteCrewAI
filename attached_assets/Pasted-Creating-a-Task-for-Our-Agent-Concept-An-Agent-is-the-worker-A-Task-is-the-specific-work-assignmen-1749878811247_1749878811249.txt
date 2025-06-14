@@ -1,0 +1,58 @@
+Creating a Task for Our Agent
+Concept: An Agent is the worker. A Task is the specific work assignment you give to that worker. A good task description is crucial. It tells the agent exactly what to do and what a successful outcome looks like.
+
+We will now create a task for our sales_briefing_agent.
+
+Step 1: Add the Task's Code
+Make sure you are in your main.py file in Replit.
+Scroll to the very end of the file.
+Copy the code block below and paste it at the end of your existing code. (Do not delete the agent code).
+Python
+
+# --- Step 3: Define the First Task ---
+
+# This is the specific work assignment for our Sales Briefing Agent.
+shipment_briefing_task = Task(
+  description="""Conduct a comprehensive sales briefing. 
+  Your first step is to ask the user for the following shipment details:
+  - Product Description
+  - Dimensions (Length, Width, Height) in inches
+  - Weight in pounds
+  - Destination Address
+  - Any special handling notes (e.g., 'Fragile', 'Keep Upright').
+  
+  For this initial test, assume the user has provided the following information:
+  'We need to ship a large, sensitive server rack. 
+  Dimensions are 48x36x72 inches, weight is 800 lbs. 
+  Destination is 123 Tech Way, Silicon Valley, CA. It is highly fragile.'""",
+  
+  expected_output="""A concise, well-formatted 'Shipment Brief' document containing all the 
+  details provided by the user. For example:
+  
+  **Shipment Brief**
+  - Product: Large, sensitive server rack
+  - Dimensions: 48x36x72 inches
+  - Weight: 800 lbs
+  - Destination: 123 Tech Way, Silicon Valley, CA
+  - Special Notes: Highly fragile""",
+  
+  agent=sales_briefing_agent # Assigns this task to our sales agent
+)
+
+# --- Update the Confirmation Message ---
+print("✅ Task 'Shipment Briefing Task' is created and assigned!")
+Step 2: Update the Final Print Statement
+Just like last time, we need to replace the old confirmation message with our new one.
+
+Find this line from the previous prompt's code: print("✅ Agent 'Sales Briefing Specialist' is defined and ready!")
+Delete that entire line. Your file should now end with the new print statement from the code block you just pasted.
+Post-Setup Validation
+Click the big green Run button.
+
+The program still won't perform the task yet. It will simply read the agent's job description and the new work assignment.
+
+You will know this step was successful if you see the following message in the Console:
+
+✅ Task 'Shipment Briefing Task' is created and assigned!
+
+This confirms that the system now has both a worker and a defined task waiting to be executed.
