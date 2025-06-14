@@ -474,6 +474,11 @@ def admin_dashboard():
     
     return render_template('admin_dashboard.html', stats=stats)
 
+@app.route('/ai-agents-process')
+def ai_agents_process():
+    """AI Agents Process explanation page"""
+    return render_template('ai_agents_process.html')
+
 @app.route('/health')
 def health_check():
     """
