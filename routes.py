@@ -7,6 +7,7 @@ from flask_jwt_extended import create_access_token, verify_jwt_in_request, get_j
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from app import app, db, limiter
 from crew_manager import TransPakCrewManager
+from direct_quote_generator import DirectQuoteGenerator
 from models import Shipment, Quote, QuoteHistory, User
 from security_middleware import SecurityMiddleware
 from cache_manager import CacheManager
