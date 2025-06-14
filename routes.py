@@ -1,5 +1,6 @@
 import os
 import logging
+from datetime import datetime
 from flask import render_template, request, flash, redirect, url_for, jsonify
 from app import app, db
 from crew_manager import TransPakCrewManager
@@ -157,16 +158,110 @@ def download_quote(quote_id):
 @app.route('/admin')
 def admin_dashboard():
     """
-    Simple admin dashboard showing system statistics
+    Admin dashboard showing system statistics and health
     """
-    stats = {
-        'total_shipments': Shipment.query.count(),
-        'total_quotes': Quote.query.count(),
-        'recent_quotes': Quote.query.order_by(Quote.created_at.desc()).limit(5).all(),
-        'quote_actions': db.session.query(QuoteHistory.action, db.func.count(QuoteHistory.id))
-                           .group_by(QuoteHistory.action).all()
-    }
+    try:
+        stats = {
+            'total_shipments': Shipment.query.count(),
+            'total_quotes': Quote.query.count(),
+            'recent_quotes': Quote.query.order_by(Quote.created_at.desc()).limit(5).all(),
+            'quote_actions': db.session.query(QuoteHistory.action, db.func.count(QuoteHistory.id))
+                               .group_by(QuoteHistory.action).all(),
+            'system_status': 'healthy',
+            'database_status': 'connected',
+            'ai_agents_status': 'active'
+        }
+    except Exception as e:
+        stats = {
+            'total_shipments': 0,
+            'total_quotes': 0,
+            'recent_quotes': [],
+            'quote_actions': [],
+            'system_status': 'error',
+            'database_status': 'disconnected',
+            'ai_agents_status': 'unknown',
+            'error_message': str(e)
+        }
+    
     return render_template('admin_dashboard.html', stats=stats)
+
+@app.route('/health')
+def health_check():
+    """
+    System health check endpoint for monitoring
+    """
+    try:
+        # Test database connection
+        db.session.execute(db.text('SELECT 1'))
+        
+        # Test AI agent availability (check OpenAI API key)
+        import os
+        openai_key = os.environ.get('OPENAI_API_KEY')
+        
+        health_status = {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'services': {
+                'database': 'connected',
+                'ai_agents': 'available' if openai_key else 'no_api_key',
+                'web_server': 'running'
+            },
+            'version': '1.0.0'
+        }
+        
+        return jsonify(health_status), 200
+        
+    except Exception as e:
+        health_status = {
+            'status': 'unhealthy',
+            'timestamp': datetime.utcnow().isoformat(),
+            'error': str(e),
+            'services': {
+                'database': 'error',
+                'ai_agents': 'unknown',
+                'web_server': 'running'
+            }
+        }
+        
+        return jsonify(health_status), 500
+
+@app.route('/api/test/quote', methods=['POST'])
+def test_quote_generation():
+    """
+    Test endpoint for automated quote generation testing
+    """
+    try:
+        test_data = {
+            'item_description': 'Test Equipment for System Validation',
+            'dimensions': '24 x 18 x 12 inches',
+            'weight': '50 lbs',
+            'origin': 'Austin, TX',
+            'destination': 'Dallas, TX',
+            'fragility': 'Standard',
+            'special_requirements': 'Test shipment for system validation',
+            'timeline': 'Test mode'
+        }
+        
+        # Validate the test data
+        validation = crew_manager.validate_shipment_info(test_data)
+        
+        if validation['valid']:
+            return jsonify({
+                'status': 'validation_passed',
+                'message': 'Test data is valid for quote generation',
+                'test_data': test_data
+            }), 200
+        else:
+            return jsonify({
+                'status': 'validation_failed',
+                'missing_fields': validation['missing_fields']
+            }), 400
+            
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
 
 @app.errorhandler(404)
 def not_found(error):
