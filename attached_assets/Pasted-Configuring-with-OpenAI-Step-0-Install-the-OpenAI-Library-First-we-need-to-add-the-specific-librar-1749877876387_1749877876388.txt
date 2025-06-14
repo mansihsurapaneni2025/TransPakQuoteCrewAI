@@ -1,0 +1,68 @@
+Configuring with OpenAI
+Step 0: Install the OpenAI Library
+First, we need to add the specific library for OpenAI to our project.
+
+Go to the Shell tab on the right side of Replit.
+Type or paste the following command and press Enter:
+Bash
+
+pip install langchain-openai
+Wait for the installation to complete before moving to the next step.
+
+Step 1: Get Your Free OpenAI API Key
+Open a new browser tab and go to the OpenAI API key page: https://platform.openai.com/api-keys
+Log in or sign up for an account. Note: You may need to set up a payment method, as OpenAI's API is a paid service, but they provide a small amount of free credits for new accounts which is more than enough for our project.
+Once logged in, click the + Create new secret key button.
+Give the key a name, for example TransPak-Key, and click Create secret key.
+Your new key will be displayed. Click the copy icon next to it. This is the only time you will see the full key, so make sure you copy it now.
+Step 2: Securely Store the API Key in Replit
+Go back to your TransPak-AI-Quoter project in Replit.
+Click the padlock icon 🔒 ("Secrets") on the left menu bar.
+In the Key field, type exactly: OPENAI_API_KEY
+In the Value field, paste the API key you just copied from OpenAI.
+Click the Add new secret button.
+Step 3: Update the Setup Code
+Now, let's update our main.py file to use the OpenAI connection instead of Groq.
+
+Click on the main.py file in the file explorer to open it.
+Delete all the code you previously pasted.
+Copy the updated code block below and paste it into your now-empty main.py file.
+Python
+
+import os
+from crewai import Agent, Task, Crew, Process
+from langchain_openai import ChatOpenAI
+
+# --- Concept Explanation ---
+# os: This library helps us interact with the operating system, 
+# specifically to get our secret API key.
+#
+# crewai: We import the core components (Agent, Task, Crew, Process) 
+# that we will use to build our AI workforce.
+#
+# langchain_openai: This specifically allows us to connect to OpenAI's AI models.
+
+# --- Step 1: Set Up the AI Model (The "Brain") ---
+
+# Retrieve the API key from Replit Secrets
+openai_api_key = os.environ.get("OPENAI_API_KEY")
+
+# Create an instance of the OpenAI LLM
+# The 'llm' variable now holds our connection to OpenAI's powerful AI model.
+# We will pass this 'llm' to our agents so they have thinking capabilities.
+# We are using "gpt-4o-mini" as it's fast, smart, and cost-effective.
+llm = ChatOpenAI(
+    api_key=openai_api_key,
+    model="gpt-4o-mini"
+)
+
+# --- Confirmation Message ---
+# This print statement will run if all the setup above is correct.
+print("✅ Tech Stack and OpenAI Brain are successfully configured!")
+
+Post-Setup Validation
+Click the big green Run button at the top of your Replit screen.
+
+You will know this step was successful if you see the following message printed in the Console window on the right:
+
+✅ Tech Stack and OpenAI Brain are successfully configured!

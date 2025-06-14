@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TransPak AI Quoter - Intelligent Shipping Solutions</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="row">
+            <div class="col-12">
+                <nav class="navbar navbar-expand-lg">
+                    <div class="container">
+                        <span class="navbar-brand mb-0 h1">
+                            <i class="fas fa-shipping-fast me-2"></i>
+                            TransPak AI Quoter
+                        </span>
+                        <span class="navbar-text">
+                            Intelligent Multi-Agent Shipping Solutions
+                        </span>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <!-- Flash Messages -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else 'info' }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- Main Form Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">
+                                <i class="fas fa-clipboard-list me-2"></i>
+                                Shipment Information
+                            </h4>
+                            <small class="text-muted">
+                                Our AI agents will analyze your shipment and generate a comprehensive quote
+                            </small>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ url_for('generate_quote') }}" id="quoteForm">
+                                <div class="row">
+                                    <!-- Item Description -->
+                                    <div class="col-md-12 mb-3">
+                                        <label for="item_description" class="form-label">
+                                            <i class="fas fa-box me-1"></i>
+                                            Item Description *
+                                        </label>
+                                        <textarea class="form-control" id="item_description" name="item_description" 
+                                                rows="3" placeholder="Detailed description of the item(s) to be shipped"
+                                                required>{{ form_data.item_description if form_data else '' }}</textarea>
+                                        <div class="form-text">Include material, condition, and any special characteristics</div>
+                                    </div>
+
+                                    <!-- Dimensions -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="dimensions" class="form-label">
+                                            <i class="fas fa-ruler-combined me-1"></i>
+                                            Dimensions (L x W x H) *
+                                        </label>
+                                        <input type="text" class="form-control" id="dimensions" name="dimensions" 
+                                               placeholder="e.g., 48 x 36 x 24 inches" required
+                                               value="{{ form_data.dimensions if form_data else '' }}">
+                                        <div class="form-text">Include units (inches, cm, feet, etc.)</div>
+                                    </div>
+
+                                    <!-- Weight -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="weight" class="form-label">
+                                            <i class="fas fa-weight-hanging me-1"></i>
+                                            Weight *
+                                        </label>
+                                        <input type="text" class="form-control" id="weight" name="weight" 
+                                               placeholder="e.g., 500 lbs, 227 kg" required
+                                               value="{{ form_data.weight if form_data else '' }}">
+                                        <div class="form-text">Include units (lbs, kg, tons, etc.)</div>
+                                    </div>
+
+                                    <!-- Origin -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="origin" class="form-label">
+                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                            Origin *
+                                        </label>
+                                        <input type="text" class="form-control" id="origin" name="origin" 
+                                               placeholder="City, State/Province, Country" required
+                                               value="{{ form_data.origin if form_data else '' }}">
+                                    </div>
+
+                                    <!-- Destination -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="destination" class="form-label">
+                                            <i class="fas fa-map-pin me-1"></i>
+                                            Destination *
+                                        </label>
+                                        <input type="text" class="form-control" id="destination" name="destination" 
+                                               placeholder="City, State/Province, Country" required
+                                               value="{{ form_data.destination if form_data else '' }}">
+                                    </div>
+
+                                    <!-- Fragility Level -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="fragility" class="form-label">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>
+                                            Fragility Level
+                                        </label>
+                                        <select class="form-select" id="fragility" name="fragility">
+                                            <option value="Low" {{ 'selected' if form_data and form_data.fragility == 'Low' else '' }}>Low - Durable goods</option>
+                                            <option value="Standard" {{ 'selected' if form_data and form_data.fragility == 'Standard' else 'selected' }}>Standard - Normal handling</option>
+                                            <option value="High" {{ 'selected' if form_data and form_data.fragility == 'High' else '' }}>High - Delicate items</option>
+                                            <option value="Extreme" {{ 'selected' if form_data and form_data.fragility == 'Extreme' else '' }}>Extreme - Precision instruments</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Timeline -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="timeline" class="form-label">
+                                            <i class="fas fa-clock me-1"></i>
+                                            Desired Timeline
+                                        </label>
+                                        <input type="text" class="form-control" id="timeline" name="timeline" 
+                                               placeholder="e.g., Within 2 weeks, ASAP, Flexible"
+                                               value="{{ form_data.timeline if form_data else '' }}">
+                                    </div>
+
+                                    <!-- Special Requirements -->
+                                    <div class="col-md-12 mb-4">
+                                        <label for="special_requirements" class="form-label">
+                                            <i class="fas fa-cog me-1"></i>
+                                            Special Requirements
+                                        </label>
+                                        <textarea class="form-control" id="special_requirements" name="special_requirements" 
+                                                rows="3" placeholder="Temperature control, orientation requirements, customs documentation, etc.">{{ form_data.special_requirements if form_data else '' }}</textarea>
+                                        <div class="form-text">Include any special handling, documentation, or regulatory requirements</div>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg" id="generateBtn">
+                                        <i class="fas fa-magic me-2"></i>
+                                        Generate AI Quote
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- How It Works Section -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-users me-2"></i>
+                                How Our AI Agents Work
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                            <div class="bg-primary rounded-circle p-2" style="width: 40px; height: 40px;">
+                                                <i class="fas fa-user-tie text-white" style="font-size: 1.2em; margin-top: 2px; margin-left: 2px;"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6>Sales Briefing Agent</h6>
+                                            <small class="text-muted">Analyzes and validates your shipment requirements</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                            <div class="bg-info rounded-circle p-2" style="width: 40px; height: 40px;">
+                                                <i class="fas fa-hard-hat text-white" style="font-size: 1.2em; margin-top: 2px; margin-left: 2px;"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6>Crating Design Agent</h6>
+                                            <small class="text-muted">Engineers optimal packaging solutions</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                            <div class="bg-success rounded-circle p-2" style="width: 40px; height: 40px;">
+                                                <i class="fas fa-route text-white" style="font-size: 1.2em; margin-top: 2px; margin-left: 2px;"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6>Logistics Planner Agent</h6>
+                                            <small class="text-muted">Optimizes routes and calculates shipping costs</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                            <div class="bg-warning rounded-circle p-2" style="width: 40px; height: 40px;">
+                                                <i class="fas fa-file-invoice-dollar text-white" style="font-size: 1.2em; margin-top: 2px; margin-left: 2px;"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6>Quote Consolidator Agent</h6>
+                                            <small class="text-muted">Compiles professional quotes with business rules</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
