@@ -55,10 +55,14 @@ class TransPakCrewManager:
             self.logger.info("Executing crew workflow")
             result = crew.kickoff()
             
+            # Extract the actual quote content from CrewAI result
+            # CrewAI kickoff() returns a CrewOutput object with .raw attribute
+            quote_content = str(result.raw) if hasattr(result, 'raw') else str(result)
+            
             self.logger.info("Quote generation completed successfully")
             return {
                 'success': True,
-                'quote': result,
+                'quote': quote_content,
                 'message': 'Quote generated successfully'
             }
             

@@ -537,6 +537,52 @@ def test_quote_generation():
             'message': str(e)
         }), 500
 
+@app.route('/test_quote_display')
+def test_quote_display():
+    """Test quote display functionality without AI complexity"""
+    test_shipment = {
+        'item_description': 'Electronic testing device',
+        'dimensions': '12 x 8 x 6',
+        'weight': '10 lbs',
+        'origin': 'San Francisco, CA',
+        'destination': 'Los Angeles, CA',
+        'fragility': 'Standard',
+        'special_requirements': '',
+        'timeline': '2-3 days'
+    }
+    
+    test_quote = """TRANSPAK SHIPPING QUOTE
+
+SHIPMENT DETAILS:
+Item: Electronic testing device
+Dimensions: 12 x 8 x 6 inches
+Weight: 10 lbs
+Route: San Francisco, CA → Los Angeles, CA
+
+PACKAGING SOLUTION:
+- Standard protective packaging
+- Anti-static materials for electronics
+- Professional handling labels
+
+LOGISTICS PLAN:
+- Ground transportation with tracking
+- 2-3 business day delivery
+- Signature confirmation required
+
+COST BREAKDOWN:
+Packaging: $25.00
+Shipping: $35.00
+Insurance: $5.00
+------------------------
+TOTAL: $65.00
+
+Quote valid for 30 days."""
+    
+    return render_template('quote_result.html', 
+                         quote=test_quote, 
+                         shipment_info=test_shipment,
+                         quote_id=1)
+
 @app.errorhandler(404)
 def not_found(error):
     return render_template('index.html'), 404
