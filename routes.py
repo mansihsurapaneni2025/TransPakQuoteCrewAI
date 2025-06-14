@@ -1,10 +1,31 @@
 import os
 import logging
 from datetime import datetime
-from flask import render_template, request, flash, redirect, url_for, jsonify
-from app import app, db
+import time
+from flask import render_template, request, flash, redirect, url_for, jsonify, make_response
+from flask_jwt_extended import create_access_token, verify_jwt_in_request, get_jwt_identity, jwt_required
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from app import app, db, limiter
 from crew_manager import TransPakCrewManager
-from models import Shipment, Quote, QuoteHistory
+from models import Shipment, Quote, QuoteHistory, User
+from security_middleware import SecurityMiddleware
+from cache_manager import CacheManager
+from analytics_dashboard import analytics_bp
+
+# Initialize extensions
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+security = SecurityMiddleware()
+cache_manager = CacheManager()
+
+# Register analytics blueprint
+app.register_blueprint(analytics_bp)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
 # Initialize the crew manager
 crew_manager = TransPakCrewManager()
@@ -17,7 +38,93 @@ def index():
     """
     return render_template('index.html')
 
+# Authentication Routes
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """User login endpoint"""
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        user = User.query.filter_by(email=email).first()
+        
+        if user and user.check_password(password):
+            login_user(user)
+            user.last_login = datetime.utcnow()
+            db.session.commit()
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Invalid email or password')
+    
+    return render_template('auth/login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    """User registration endpoint"""
+    if request.method == 'POST':
+        email = request.form.get('email')
+        company_name = request.form.get('company_name')
+        contact_name = request.form.get('contact_name')
+        phone = request.form.get('phone')
+        password = request.form.get('password')
+        
+        # Check if user already exists
+        if User.query.filter_by(email=email).first():
+            flash('Email already registered')
+            return render_template('auth/register.html')
+        
+        # Create new user
+        user = User(
+            email=email,
+            company_name=company_name,
+            contact_name=contact_name,
+            phone=phone
+        )
+        user.set_password(password)
+        user.generate_api_key()
+        
+        db.session.add(user)
+        db.session.commit()
+        
+        login_user(user)
+        flash('Registration successful!')
+        return redirect(url_for('dashboard'))
+    
+    return render_template('auth/register.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    """User logout endpoint"""
+    logout_user()
+    return redirect(url_for('index'))
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    """User dashboard with quote history"""
+    user_shipments = Shipment.query.filter_by(user_id=current_user.id).order_by(Shipment.created_at.desc()).limit(10).all()
+    return render_template('dashboard.html', shipments=user_shipments)
+
+# API Authentication
+@app.route('/api/token', methods=['POST'])
+@limiter.limit("5 per minute")
+def get_api_token():
+    """Generate JWT token for API access"""
+    email = request.json.get('email')
+    password = request.json.get('password')
+    
+    user = User.query.filter_by(email=email).first()
+    
+    if user and user.check_password(password):
+        access_token = create_access_token(identity=user.id)
+        return jsonify({'access_token': access_token, 'api_key': user.api_key})
+    
+    return jsonify({'error': 'Invalid credentials'}), 401
+
 @app.route('/generate_quote', methods=['POST'])
+@limiter.limit("10 per minute")
+@security.rate_limit(max_requests=5, window_minutes=1)
 def generate_quote():
     """
     Process shipment information and generate quote using AI agents
