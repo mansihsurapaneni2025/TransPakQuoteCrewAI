@@ -93,7 +93,7 @@ class User(UserMixin, db.Model):
 class Quote(db.Model):
     """Model to store AI-generated quotes"""
     id = db.Column(db.Integer, primary_key=True)
-    shipment_id = db.Column(db.Integer, db.ForeignKey('shipment.id'), nullable=False)
+    shipment_id = db.Column(db.Integer, db.ForeignKey('shipments.id'), nullable=False)
     quote_content = db.Column(Text, nullable=False)  # Full AI-generated quote
     agent_results = db.Column(JSON)  # Store individual agent results
     status = db.Column(db.String(50), default='generated')  # generated, accepted, declined
