@@ -8,12 +8,15 @@ from tasks import TransPakTasks
 import pricing_tools
 import json
 from ai_enhancements import AIEnhancementEngine
+from agent_memory import AgentMemoryCapture, MCPConnector
 
 class TransPakCrewManager:
     def __init__(self):
         self.agents = TransPakAgents()
         self.tasks = TransPakTasks()
         self.ai_engine = AIEnhancementEngine()
+        self.agent_memory = AgentMemoryCapture()
+        self.mcp_connector = MCPConnector()
         logging.basicConfig(level=logging.DEBUG)
         self.logger = logging.getLogger(__name__)
     
@@ -85,7 +88,40 @@ class TransPakCrewManager:
             }
     
     def _extract_agent_activity(self, crew, shipment_info):
-        """Extract real agent activity data for traceability"""
+        """Extract real agent activity data using dynamic pricing calculations"""
+        
+        # Calculate real packaging costs
+        packaging_data = pricing_tools.calculate_packaging_cost(
+            shipment_info.get('dimensions', '48x36x24'),
+            shipment_info.get('weight', '350'),
+            shipment_info.get('fragility', 'Standard'),
+            shipment_info.get('item_description', 'Industrial equipment')
+        )
+        
+        # Calculate real shipping costs
+        shipping_data = pricing_tools.calculate_shipping_rate(
+            shipment_info.get('origin', 'San Jose CA'),
+            shipment_info.get('destination', 'Austin TX'),
+            shipment_info.get('weight', '350'),
+            shipment_info.get('dimensions', '48x36x24'),
+            shipment_info.get('fragility', 'Standard')
+        )
+        
+        # Calculate real insurance costs
+        insurance_data = pricing_tools.calculate_insurance_cost(
+            shipment_info.get('item_description', 'Industrial equipment'),
+            shipment_info.get('weight', '350'),
+            shipment_info.get('fragility', 'Standard')
+        )
+        
+        # Calculate real special handling costs
+        handling_data = pricing_tools.calculate_special_handling_cost(
+            shipment_info.get('weight', '350'),
+            shipment_info.get('dimensions', '48x36x24'),
+            shipment_info.get('fragility', 'Standard'),
+            shipment_info.get('special_requirements', '')
+        )
+        
         return {
             'sales_briefing': {
                 'task': 'Validated shipment information and identified requirements',
@@ -100,54 +136,93 @@ class TransPakCrewManager:
             'packaging_engineering': {
                 'task': f"Designed optimal packaging solution for {shipment_info.get('fragility', 'Standard')} fragility items",
                 'calculations': [
-                    'Material requirements based on dimensions and fragility',
-                    f"Protective cushioning for {shipment_info.get('weight', 'N/A')} payload",
-                    'Custom crating specifications'
+                    f"Volume calculation: {packaging_data.get('volume_cubic_feet', 0)} cubic feet",
+                    f"Complexity factor: {packaging_data.get('complexity_factor', 1.0)}",
+                    f"Estimated labor: {packaging_data.get('estimated_labor_hours', 0)} hours"
                 ],
                 'cost_components': {
-                    'materials_fabrication': 350.00,
-                    'protective_cushioning': 75.00,
-                    'assembly_labor': 25.00,
-                    'total': 450.00
+                    'materials_fabrication': packaging_data.get('materials_fabrication', 0),
+                    'protective_cushioning': packaging_data.get('special_requirements', 0),
+                    'assembly_labor': packaging_data.get('assembly_labor', 0),
+                    'total': packaging_data.get('total_packaging_cost', 0)
                 }
             },
             'logistics_planning': {
                 'task': f"Route planning from {shipment_info.get('origin', 'N/A')} to {shipment_info.get('destination', 'N/A')}",
                 'analysis': [
-                    'Calculated distance and optimal routing',
-                    f"Selected appropriate carrier for {shipment_info.get('fragility', 'Standard')} items",
-                    f"Factored in timeline: {shipment_info.get('timeline') or 'Standard delivery'}"
+                    f"Distance factor: {shipping_data.get('distance_factor', 1.0)}",
+                    f"Billable weight: {shipping_data.get('billable_weight', 0)} lbs",
+                    f"Fragility multiplier: {shipping_data.get('fragility_multiplier', 1.0)}"
                 ],
                 'cost_components': {
-                    'base_freight': 950.00,
-                    'fuel_surcharge': 150.00,
-                    'fragile_handling': 150.00,
-                    'total': 1250.00
+                    'base_freight': shipping_data.get('base_freight_cost', 0),
+                    'fuel_surcharge': shipping_data.get('fuel_surcharge', 0),
+                    'fragile_handling': shipping_data.get('fragile_handling_fee', 0),
+                    'total': shipping_data.get('total_transportation_cost', 0)
                 }
             },
             'quote_consolidation': {
                 'task': 'Consolidated all cost components into comprehensive quote',
                 'insurance_documentation': {
-                    'insurance_coverage': 75.00,
-                    'documentation_permits': 50.00,
-                    'total': 125.00
+                    'insurance_coverage': insurance_data.get('insurance_coverage', 0),
+                    'documentation_permits': insurance_data.get('documentation_permits', 0),
+                    'total': insurance_data.get('total_insurance_documentation', 0)
                 },
                 'special_handling': {
-                    'loading_unloading': 100.00,
-                    'coordination_tracking': 75.00,
-                    'total': 175.00
+                    'loading_unloading': handling_data.get('loading_unloading_service', 0),
+                    'coordination_tracking': handling_data.get('coordination_tracking', 0),
+                    'total': handling_data.get('total_special_handling', 0)
                 }
             }
         }
     
     def _calculate_cost_breakdown(self, shipment_info):
-        """Calculate detailed cost breakdown for traceability"""
+        """Calculate detailed cost breakdown using real pricing algorithms"""
+        
+        # Get dynamic pricing calculations
+        packaging_data = pricing_tools.calculate_packaging_cost(
+            shipment_info.get('dimensions', '48x36x24'),
+            shipment_info.get('weight', '350'),
+            shipment_info.get('fragility', 'Standard'),
+            shipment_info.get('item_description', 'Industrial equipment')
+        )
+        
+        shipping_data = pricing_tools.calculate_shipping_rate(
+            shipment_info.get('origin', 'San Jose CA'),
+            shipment_info.get('destination', 'Austin TX'),
+            shipment_info.get('weight', '350'),
+            shipment_info.get('dimensions', '48x36x24'),
+            shipment_info.get('fragility', 'Standard')
+        )
+        
+        insurance_data = pricing_tools.calculate_insurance_cost(
+            shipment_info.get('item_description', 'Industrial equipment'),
+            shipment_info.get('weight', '350'),
+            shipment_info.get('fragility', 'Standard')
+        )
+        
+        handling_data = pricing_tools.calculate_special_handling_cost(
+            shipment_info.get('weight', '350'),
+            shipment_info.get('dimensions', '48x36x24'),
+            shipment_info.get('fragility', 'Standard'),
+            shipment_info.get('special_requirements', '')
+        )
+        
+        # Extract totals from calculations
+        packaging_total = packaging_data.get('total_packaging_cost', 0)
+        transportation_total = shipping_data.get('total_transportation_cost', 0)
+        insurance_total = insurance_data.get('total_insurance_documentation', 0)
+        handling_total = handling_data.get('total_special_handling', 0)
+        
+        # Calculate final total
+        grand_total = packaging_total + transportation_total + insurance_total + handling_total
+        
         return {
-            'packaging_crating': 450.00,
-            'transportation': 1250.00,
-            'insurance_documentation': 125.00,
-            'special_handling': 175.00,
-            'total': 2000.00
+            'packaging_crating': round(packaging_total, 2),
+            'transportation': round(transportation_total, 2),
+            'insurance_documentation': round(insurance_total, 2),
+            'special_handling': round(handling_total, 2),
+            'total': round(grand_total, 2)
         }
     
     def generate_simple_quote(self, shipment_info):
