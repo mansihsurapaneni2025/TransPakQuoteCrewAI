@@ -13,6 +13,8 @@ from security_middleware import SecurityMiddleware
 from cache_manager import CacheManager
 from analytics_dashboard import analytics_bp
 from monitoring_config import system_monitor, get_deployment_readiness
+from real_time_agent_monitor import agent_monitor
+import uuid
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
