@@ -24,10 +24,13 @@ class DirectQuoteGenerator:
         self.agent_memory = AgentMemoryCapture()
         self.logger = logging.getLogger(__name__)
     
-    def generate_quote(self, shipment_info: Dict[str, Any]) -> Dict[str, Any]:
+    def generate_quote(self, shipment_info: Dict[str, Any], session_id: str = None) -> Dict[str, Any]:
         """Generate comprehensive quote with agent activity simulation"""
         
         try:
+            # Import agent monitor here to avoid circular imports
+            from real_time_agent_monitor import agent_monitor
+            
             # Extract shipment parameters
             item_description = shipment_info.get('item_description', 'Industrial equipment')
             dimensions = shipment_info.get('dimensions', '48x36x24')
@@ -37,11 +40,31 @@ class DirectQuoteGenerator:
             fragility = shipment_info.get('fragility', 'Standard')
             special_requirements = shipment_info.get('special_requirements', '')
             
+            # Log real-time agent activities if session_id provided
+            if session_id:
+                agent_monitor.log_agent_activity(session_id, "Sales Briefing Agent", 
+                                               "Analyzing shipment requirements...", "analysis", 20)
+                agent_monitor.log_agent_activity(session_id, "Sales Briefing Agent", 
+                                               "Validating provided information...", "validation", 30)
+            
             # Generate agent activity with enhanced calculations
             agent_activity = self._generate_agent_activity(shipment_info)
             
+            if session_id:
+                agent_monitor.log_agent_activity(session_id, "Crating Design Agent", 
+                                               "Designing optimal crating solution...", "design", 50)
+                agent_monitor.log_agent_activity(session_id, "Crating Design Agent", 
+                                               "Calculating material requirements...", "calculation", 60)
+            
             # Calculate cost breakdown using enhanced pricing
             cost_breakdown = self._calculate_enhanced_cost_breakdown(shipment_info)
+            
+            if session_id:
+                agent_monitor.log_cost_calculation(session_id, cost_breakdown)
+                agent_monitor.log_agent_activity(session_id, "Logistics Planner Agent", 
+                                               "Optimizing shipping routes...", "routing", 75)
+                agent_monitor.log_agent_activity(session_id, "Quote Consolidator Agent", 
+                                               "Assembling comprehensive quote...", "consolidation", 90)
             
             # Generate professional quote content
             quote_content = self._generate_quote_content(shipment_info, agent_activity, cost_breakdown)

@@ -176,14 +176,23 @@ def generate_quote():
         db.session.add(shipment)
         db.session.commit()
         
+        # Generate session ID for real-time monitoring
+        session_id = request.form.get('session_id') or str(uuid.uuid4())
+        
+        # Start agent monitoring session
+        agent_monitor.start_quote_session(session_id, shipment_info)
+        
         # Generate quote using AI agents with full traceability
         try:
-            result = quote_generator.generate_quote(shipment_info)
+            result = quote_generator.generate_quote(shipment_info, session_id)
             
             if result['success']:
                 quote_content = result['quote_content']
                 agent_activity = result.get('agent_activity', {})
                 cost_breakdown = result.get('cost_breakdown', {})
+                
+                # Complete monitoring session
+                agent_monitor.complete_quote_session(session_id, quote_content, True)
                 
                 # Save quote to database
                 quote = Quote(
@@ -608,6 +617,38 @@ Quote valid for 30 days."""
 @app.errorhandler(404)
 def not_found(error):
     return render_template('index.html'), 404
+
+# Real-time Agent Activity API Endpoints
+@app.route('/api/agent-activity/<session_id>')
+def get_agent_activity(session_id):
+    """Get real-time agent activity for a session"""
+    try:
+        activities = agent_monitor.get_queued_activities(session_id)
+        return jsonify({
+            'success': True,
+            'session_id': session_id,
+            'activities': activities
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/session-summary/<session_id>')
+def get_session_summary(session_id):
+    """Get complete session summary"""
+    try:
+        summary = agent_monitor.get_session_summary(session_id)
+        return jsonify({
+            'success': True,
+            'summary': summary
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
 @app.errorhandler(500)
 def internal_error(error):

@@ -155,7 +155,10 @@ document.addEventListener('DOMContentLoaded', function() {
 // Save form data periodically
 setInterval(saveFormData, 30000); // Save every 30 seconds
 
-// AI Agent Logging System
+// Dynamic AI Agent Logging System
+let currentSessionId = null;
+let activityPollingInterval = null;
+
 function initializeAgentLog() {
     const agentLog = document.getElementById('agentLog');
     if (!agentLog) return;
@@ -171,13 +174,180 @@ function initializeAgentLog() {
         </div>
     `;
     
-    // Start simulated agent activity logging
-    startAgentActivitySimulation();
+    // Start real-time agent activity monitoring
+    startRealTimeAgentMonitoring();
 }
 
-function startAgentActivitySimulation() {
+function startRealTimeAgentMonitoring() {
+    // Extract session ID from form submission or generate one
+    const form = document.getElementById('quoteForm');
+    if (form) {
+        // Add session tracking to form
+        const sessionInput = document.createElement('input');
+        sessionInput.type = 'hidden';
+        sessionInput.name = 'session_id';
+        sessionInput.value = generateSessionId();
+        form.appendChild(sessionInput);
+        
+        currentSessionId = sessionInput.value;
+        
+        // Start polling for real-time updates
+        startActivityPolling();
+    }
+}
+
+function generateSessionId() {
+    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function startActivityPolling() {
+    if (!currentSessionId) return;
+    
+    activityPollingInterval = setInterval(() => {
+        fetchAgentActivities();
+    }, 1000); // Poll every second
+}
+
+function fetchAgentActivities() {
+    if (!currentSessionId) return;
+    
+    fetch(`/api/agent-activity/${currentSessionId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.activities.length > 0) {
+                updateAgentLog(data.activities);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching agent activities:', error);
+        });
+}
+
+function updateAgentLog(activities) {
     const agentLog = document.getElementById('agentLog');
     if (!agentLog) return;
+    
+    activities.forEach(activity => {
+        displayAgentActivity(activity);
+    });
+}
+
+function displayAgentActivity(activity) {
+    const agentLog = document.getElementById('agentLog');
+    if (!agentLog) return;
+    
+    let activityHtml = '';
+    
+    switch (activity.type) {
+        case 'agent_activity':
+            activityHtml = createAgentActivityHtml(activity);
+            break;
+        case 'cost_calculation':
+            activityHtml = createCostCalculationHtml(activity);
+            break;
+        case 'session_complete':
+            activityHtml = createSessionCompleteHtml(activity);
+            stopActivityPolling();
+            break;
+        default:
+            activityHtml = createGenericActivityHtml(activity);
+    }
+    
+    if (activityHtml) {
+        agentLog.insertAdjacentHTML('beforeend', activityHtml);
+        agentLog.scrollTop = agentLog.scrollHeight;
+    }
+}
+
+function createAgentActivityHtml(activity) {
+    const agentIcons = {
+        'Sales Briefing Agent': 'fas fa-user-tie',
+        'Crating Design Agent': 'fas fa-hard-hat',
+        'Logistics Planner Agent': 'fas fa-route',
+        'Quote Consolidator Agent': 'fas fa-file-contract',
+        'System': 'fas fa-cogs'
+    };
+    
+    const agentColors = {
+        'Sales Briefing Agent': 'primary',
+        'Crating Design Agent': 'info',
+        'Logistics Planner Agent': 'warning',
+        'Quote Consolidator Agent': 'success',
+        'System': 'secondary'
+    };
+    
+    const icon = agentIcons[activity.agent_name] || 'fas fa-robot';
+    const color = agentColors[activity.agent_name] || 'primary';
+    
+    return `
+        <div class="border-start border-2 border-${color} ps-3 mb-2" data-activity-id="${activity.timestamp}">
+            <div class="d-flex align-items-center">
+                <i class="${icon} text-${color} me-2"></i>
+                <strong>${activity.agent_name}</strong>
+                ${activity.progress ? `<div class="progress ms-2 flex-grow-1" style="height: 4px;">
+                    <div class="progress-bar bg-${color}" style="width: ${activity.progress}%"></div>
+                </div>` : ''}
+            </div>
+            <div class="mt-1">
+                <small class="text-muted">${activity.activity}</small>
+            </div>
+        </div>
+    `;
+}
+
+function createCostCalculationHtml(activity) {
+    return `
+        <div class="border-start border-2 border-success ps-3 mb-2">
+            <div class="text-success">
+                <i class="fas fa-calculator me-2"></i>
+                <strong>Cost Analysis Complete</strong>
+            </div>
+            <div class="mt-1">
+                <small class="text-muted">Dynamic pricing calculations finished</small>
+            </div>
+        </div>
+    `;
+}
+
+function createSessionCompleteHtml(activity) {
+    return `
+        <div class="border-start border-2 border-success ps-3 mb-2">
+            <div class="text-success">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Quote Generation Complete</strong>
+            </div>
+            <div class="mt-1">
+                <small class="text-muted">All AI agents have completed their tasks successfully</small>
+            </div>
+        </div>
+    `;
+}
+
+function createGenericActivityHtml(activity) {
+    return `
+        <div class="border-start border-2 border-info ps-3 mb-2">
+            <div class="text-info">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>System Update</strong>
+            </div>
+            <div class="mt-1">
+                <small class="text-muted">${activity.message || 'Processing...'}</small>
+            </div>
+        </div>
+    `;
+}
+
+function stopActivityPolling() {
+    if (activityPollingInterval) {
+        clearInterval(activityPollingInterval);
+        activityPollingInterval = null;
+    }
+}
+
+// Removed simulated agent activity - now using real-time data
+function startAgentActivitySimulation() {
+    // Legacy function - replaced with real-time monitoring
+    return;
     
     const activities = [
         {
