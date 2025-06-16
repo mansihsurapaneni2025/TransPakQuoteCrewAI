@@ -13,9 +13,6 @@ from security_middleware import SecurityMiddleware
 from cache_manager import CacheManager
 from analytics_dashboard import analytics_bp
 from monitoring_config import system_monitor, get_deployment_readiness
-from real_time_agent_monitor import agent_monitor
-from external_data_sources import real_time_data
-import uuid
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -177,23 +174,14 @@ def generate_quote():
         db.session.add(shipment)
         db.session.commit()
         
-        # Generate session ID for real-time monitoring
-        session_id = request.form.get('session_id') or str(uuid.uuid4())
-        
-        # Start agent monitoring session
-        agent_monitor.start_quote_session(session_id, shipment_info)
-        
         # Generate quote using AI agents with full traceability
         try:
-            result = quote_generator.generate_quote(shipment_info, session_id)
+            result = quote_generator.generate_quote(shipment_info)
             
             if result['success']:
                 quote_content = result['quote_content']
                 agent_activity = result.get('agent_activity', {})
                 cost_breakdown = result.get('cost_breakdown', {})
-                
-                # Complete monitoring session
-                agent_monitor.complete_quote_session(session_id, quote_content, True)
                 
                 # Save quote to database
                 quote = Quote(
@@ -618,117 +606,6 @@ Quote valid for 30 days."""
 @app.errorhandler(404)
 def not_found(error):
     return render_template('index.html'), 404
-
-# Real-time Agent Activity API Endpoints
-@app.route('/api/agent-activity/<session_id>')
-def get_agent_activity(session_id):
-    """Get real-time agent activity for a session"""
-    try:
-        activities = agent_monitor.get_queued_activities(session_id)
-        return jsonify({
-            'success': True,
-            'session_id': session_id,
-            'activities': activities
-        })
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
-
-@app.route('/api/session-summary/<session_id>')
-def get_session_summary(session_id):
-    """Get complete session summary"""
-    try:
-        summary = agent_monitor.get_session_summary(session_id)
-        return jsonify({
-            'success': True,
-            'summary': summary
-        })
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
-
-# Live Market Data API Endpoints
-@app.route('/api/market-data/fuel-prices/<state_code>')
-def get_fuel_prices(state_code):
-    """Get real-time fuel prices by state"""
-    try:
-        data = real_time_data.get_fuel_prices(state_code.upper())
-        return jsonify({
-            'success': True,
-            'data': data
-        })
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
-
-@app.route('/api/market-data/labor-rates')
-def get_labor_rates():
-    """Get real-time labor rates by location"""
-    location = request.args.get('location', 'California')
-    try:
-        data = real_time_data.get_labor_rates(location)
-        return jsonify({
-            'success': True,
-            'data': data
-        })
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
-
-@app.route('/api/market-data/material-prices')
-def get_material_prices():
-    """Get real-time material prices"""
-    try:
-        data = real_time_data.get_material_prices()
-        return jsonify({
-            'success': True,
-            'data': data
-        })
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
-
-@app.route('/api/market-data/carrier-performance')
-def get_carrier_performance():
-    """Get real-time carrier performance metrics"""
-    try:
-        data = real_time_data.get_shipping_carrier_performance()
-        return jsonify({
-            'success': True,
-            'data': data
-        })
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
-
-@app.route('/api/market-data/weather-impact')
-def get_weather_impact():
-    """Get weather impact assessment for shipping route"""
-    origin = request.args.get('origin', 'San Francisco, CA')
-    destination = request.args.get('destination', 'Austin, TX')
-    try:
-        data = real_time_data.get_weather_impact(origin, destination)
-        return jsonify({
-            'success': True,
-            'data': data
-        })
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
 
 @app.errorhandler(500)
 def internal_error(error):
