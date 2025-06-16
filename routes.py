@@ -14,6 +14,7 @@ from cache_manager import CacheManager
 from analytics_dashboard import analytics_bp
 from monitoring_config import system_monitor, get_deployment_readiness
 from real_time_agent_monitor import agent_monitor
+from external_data_sources import real_time_data
 import uuid
 
 # Configure logging
@@ -643,6 +644,85 @@ def get_session_summary(session_id):
         return jsonify({
             'success': True,
             'summary': summary
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+# Live Market Data API Endpoints
+@app.route('/api/market-data/fuel-prices/<state_code>')
+def get_fuel_prices(state_code):
+    """Get real-time fuel prices by state"""
+    try:
+        data = real_time_data.get_fuel_prices(state_code.upper())
+        return jsonify({
+            'success': True,
+            'data': data
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/market-data/labor-rates')
+def get_labor_rates():
+    """Get real-time labor rates by location"""
+    location = request.args.get('location', 'California')
+    try:
+        data = real_time_data.get_labor_rates(location)
+        return jsonify({
+            'success': True,
+            'data': data
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/market-data/material-prices')
+def get_material_prices():
+    """Get real-time material prices"""
+    try:
+        data = real_time_data.get_material_prices()
+        return jsonify({
+            'success': True,
+            'data': data
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/market-data/carrier-performance')
+def get_carrier_performance():
+    """Get real-time carrier performance metrics"""
+    try:
+        data = real_time_data.get_shipping_carrier_performance()
+        return jsonify({
+            'success': True,
+            'data': data
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/market-data/weather-impact')
+def get_weather_impact():
+    """Get weather impact assessment for shipping route"""
+    origin = request.args.get('origin', 'San Francisco, CA')
+    destination = request.args.get('destination', 'Austin, TX')
+    try:
+        data = real_time_data.get_weather_impact(origin, destination)
+        return jsonify({
+            'success': True,
+            'data': data
         })
     except Exception as e:
         return jsonify({
