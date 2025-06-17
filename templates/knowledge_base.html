@@ -209,6 +209,7 @@
                     </div>
                     <div class="card-body p-0">
                         <a href="#overview" class="toc-link">System Overview</a>
+                        <a href="#folder-structure" class="toc-link">Folder Structure</a>
                         <a href="#architecture" class="toc-link">Architecture</a>
                         <a href="#frontend" class="toc-link">Frontend Features</a>
                         <a href="#backend" class="toc-link">Backend Components</a>
@@ -277,6 +278,184 @@
                                     <small>UI Framework</small>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Folder Structure -->
+                <section id="folder-structure" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-folder-tree me-2"></i>Project Folder Structure</h2>
+                        </div>
+                        <div class="card-body">
+                            <h5>Complete Project Organization</h5>
+                            <p>The TransPak AI Quoter follows a modular, scalable folder structure designed for maintainability and clear separation of concerns.</p>
+                            
+                            <div class="code-block">
+transpak-ai-quoter/
+├── main.py                      # Application entry point
+├── app.py                       # Flask app factory and configuration
+├── routes.py                    # Main web application routes
+├── models.py                    # SQLAlchemy database models
+├── pyproject.toml               # Python dependencies and project config
+├── uv.lock                      # Dependency lock file
+├── .replit                      # Replit deployment configuration
+├── PROJECT_STRUCTURE.md         # Project documentation
+│
+├── agents.py                    # CrewAI agent definitions
+├── crew_manager.py              # Agent orchestration and workflow management
+├── tasks.py                     # CrewAI task definitions
+├── pricing_tools.py             # Custom tools for pricing calculations
+│
+├── a2a_protocol.py              # Agent2Agent communication protocol
+├── a2a_agent_adapters.py        # Agent adapters for A2A integration
+├── a2a_api_routes.py            # A2A REST API endpoints
+├── external_agent_connector.py  # External agent integration
+│
+├── cache_manager.py             # Redis caching implementation
+├── security_middleware.py       # Security features and authentication
+├── monitoring_config.py         # Performance monitoring setup
+├── analytics_dashboard.py       # Analytics and metrics endpoints
+├── ai_enhancements.py           # AI confidence scoring and learning
+├── agent_memory.py              # Agent reasoning capture and analysis
+│
+├── enhanced_pricing_engine.py   # Advanced pricing algorithms
+├── direct_quote_generator.py    # Simplified quote generation
+├── simple_quote_test.py         # Basic testing utilities
+├── test_routes.py               # Route testing suite
+├── routes_fixed.py              # Route fixes and improvements
+│
+├── celery_app.py                # Asynchronous task processing
+├── transpak/                    # Core application package
+│   ├── __init__.py
+│   └── core/
+│       ├── app_factory.py       # Application factory pattern
+│       └── config.py            # Configuration management
+│
+├── transpak_app/               # Extended application modules
+│   ├── __init__.py
+│   └── core/
+│       └── models.py           # Extended data models
+│
+├── templates/                  # HTML templates
+│   ├── index.html              # Homepage with quote form
+│   ├── quote_result.html       # Quote display page
+│   ├── quotes_list.html        # Quote history listing
+│   ├── dashboard.html          # User dashboard
+│   ├── admin_dashboard.html    # Administrative interface
+│   ├── ai_agents_process.html  # Agent process explanation
+│   ├── a2a_demo.html          # A2A protocol demonstration
+│   ├── knowledge_base.html     # System documentation
+│   └── auth/                   # Authentication templates
+│       ├── login.html          # User login form
+│       └── register.html       # User registration form
+│
+├── static/                     # Static web assets
+│   └── app.js                  # Frontend JavaScript functionality
+│
+└── attached_assets/            # Documentation and reference files
+    ├── Pasted-The-AI-Workforce-Our-Crew-of-Agents-*.txt
+    ├── Pasted-Building-Our-First-Agent-The-Sales-Specialist-*.txt
+    ├── Pasted-Creating-a-Task-for-Our-Agent-*.txt
+    ├── Pasted-Assembling-the-Crew-and-Launching-the-Mission-*.txt
+    ├── Pasted-Configuring-with-OpenAI-*.txt
+    ├── Pasted-Test-Plan-TransPak-AI-Quoter-System-*.txt
+    └── Pasted-You-are-an-expert-crewAI-developer-*.txt</div>
+
+                            <h5>Folder Structure Principles</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Core Application Files</h6>
+                                    <ul class="feature-list">
+                                        <li><strong>main.py:</strong> Single entry point for the application</li>
+                                        <li><strong>app.py:</strong> Flask factory pattern implementation</li>
+                                        <li><strong>routes.py:</strong> Centralized route definitions</li>
+                                        <li><strong>models.py:</strong> Database schema and ORM models</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>AI and Agent Components</h6>
+                                    <ul class="feature-list">
+                                        <li><strong>agents.py:</strong> CrewAI agent configurations</li>
+                                        <li><strong>crew_manager.py:</strong> Agent workflow orchestration</li>
+                                        <li><strong>a2a_protocol.py:</strong> Cross-framework communication</li>
+                                        <li><strong>external_agent_connector.py:</strong> External integrations</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h5>Template Organization</h5>
+                            <div class="tech-stack-grid">
+                                <div class="tech-item">
+                                    <h6>Core Pages</h6>
+                                    <small>index.html, dashboard.html, admin_dashboard.html</small>
+                                </div>
+                                <div class="tech-item">
+                                    <h6>AI Features</h6>
+                                    <small>ai_agents_process.html, a2a_demo.html</small>
+                                </div>
+                                <div class="tech-item">
+                                    <h6>Quote System</h6>
+                                    <small>quote_result.html, quotes_list.html</small>
+                                </div>
+                                <div class="tech-item">
+                                    <h6>Documentation</h6>
+                                    <small>knowledge_base.html</small>
+                                </div>
+                                <div class="tech-item">
+                                    <h6>Authentication</h6>
+                                    <small>auth/login.html, auth/register.html</small>
+                                </div>
+                                <div class="tech-item">
+                                    <h6>Static Assets</h6>
+                                    <small>static/app.js, attached_assets/</small>
+                                </div>
+                            </div>
+
+                            <h5>File Naming Conventions</h5>
+                            <ul class="feature-list">
+                                <li><strong>Snake Case:</strong> Python files use snake_case (e.g., crew_manager.py)</li>
+                                <li><strong>Descriptive Names:</strong> Files clearly indicate their purpose</li>
+                                <li><strong>Grouped Functionality:</strong> Related features grouped together</li>
+                                <li><strong>Template Hierarchy:</strong> Templates organized by feature area</li>
+                                <li><strong>Separation of Concerns:</strong> Clear boundaries between components</li>
+                            </ul>
+
+                            <h5>Key Design Decisions</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Modular Architecture</h6>
+                                    <p>Each major feature (A2A protocol, agent management, analytics) is contained in separate modules for maintainability.</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Single Responsibility</h6>
+                                    <p>Each file has a clear, single purpose - routing, data models, agent definitions, or specific functionality.</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Scalable Structure</h6>
+                                    <p>The folder organization supports adding new features without restructuring existing code.</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Clear Dependencies</h6>
+                                    <p>Import relationships are logical and avoid circular dependencies between modules.</p>
+                                </div>
+                            </div>
+
+                            <h5>Development Workflow Files</h5>
+                            <div class="code-block">
+# Configuration Files
+.replit                    # Replit deployment configuration
+pyproject.toml            # Python project metadata and dependencies
+uv.lock                   # Locked dependency versions
+
+# Documentation
+PROJECT_STRUCTURE.md      # Project overview and structure
+attached_assets/          # Reference documentation and specs
+
+# Testing and Quality
+test_routes.py            # Route and endpoint testing
+simple_quote_test.py      # Basic functionality testing</div>
                         </div>
                     </div>
                 </section>
