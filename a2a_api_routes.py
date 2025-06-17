@@ -37,7 +37,36 @@ def discover_agents():
     try:
         agents = []
         for agent_card in agent_registry.agents.values():
-            agents.append(agent_card.to_dict())
+            agent_dict = {
+                'agent_id': agent_card.agent_id,
+                'name': agent_card.name,
+                'framework': agent_card.framework.value if hasattr(agent_card.framework, 'value') else str(agent_card.framework),
+                'version': agent_card.version,
+                'description': agent_card.description,
+                'capabilities': [],
+                'endpoints': agent_card.endpoints,
+                'auth_schemes': agent_card.auth_schemes,
+                'status': agent_card.status,
+                'last_updated': agent_card.last_updated,
+                'metadata': agent_card.metadata or {}
+            }
+            
+            # Serialize capabilities
+            for cap in agent_card.capabilities:
+                cap_dict = {
+                    'skill_id': cap.skill_id,
+                    'name': cap.name,
+                    'description': cap.description,
+                    'category': cap.category.value if hasattr(cap.category, 'value') else str(cap.category),
+                    'input_types': cap.input_types,
+                    'output_types': cap.output_types,
+                    'parameters': cap.parameters,
+                    'version': cap.version,
+                    'supported_modes': [mode.value if hasattr(mode, 'value') else str(mode) for mode in cap.supported_modes] if cap.supported_modes else []
+                }
+                agent_dict['capabilities'].append(cap_dict)
+            
+            agents.append(agent_dict)
         
         return jsonify({
             'success': True,
@@ -79,12 +108,12 @@ def get_agent_capabilities(agent_id):
                 'skill_id': cap.skill_id,
                 'name': cap.name,
                 'description': cap.description,
-                'category': cap.category.value,
+                'category': cap.category.value if hasattr(cap.category, 'value') else str(cap.category),
                 'input_types': cap.input_types,
                 'output_types': cap.output_types,
                 'parameters': cap.parameters,
                 'version': cap.version,
-                'supported_modes': [mode.value for mode in cap.supported_modes] if cap.supported_modes else []
+                'supported_modes': [mode.value if hasattr(mode, 'value') else str(mode) for mode in cap.supported_modes] if cap.supported_modes else []
             }
             capabilities.append(cap_dict)
         
