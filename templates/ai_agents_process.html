@@ -11,7 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #6366f1;
+            --primary-color: #D31344;
+            --primary-light: #E8446B;
+            --primary-dark: #B50F39;
             --secondary-color: #8b5cf6;
             --neutral-50: #fafafa;
             --neutral-100: #f5f5f5;
@@ -168,21 +170,25 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section">
+    <section class="hero-section" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); color: white; padding: 4rem 0; margin-bottom: 3rem;">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-8">
                     <h1 class="display-4 fw-bold mb-3">AI Agents Process Revolution</h1>
                     <p class="lead mb-4">Discover how Google CrewAI A2A and MCP transform traditional manual processes into intelligent, automated workflows</p>
-                    <div class="d-flex flex-wrap">
-                        <span class="tech-badge">Google CrewAI A2A</span>
-                        <span class="tech-badge">Model Context Protocol</span>
-                        <span class="tech-badge">Multi-Agent Orchestration</span>
-                        <span class="tech-badge">Real-Time Processing</span>
+                    <div class="d-flex flex-wrap mb-4">
+                        <span class="tech-badge" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">Google CrewAI A2A</span>
+                        <span class="tech-badge" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">Model Context Protocol</span>
+                        <span class="tech-badge" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">Multi-Agent Orchestration</span>
+                        <span class="tech-badge" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">Real-Time Processing</span>
+                    </div>
+                    <div class="hero-buttons">
+                        <a href="/" class="btn btn-light btn-lg me-3" style="color: var(--primary-color); font-weight: 600;">Get AI Quote Now</a>
+                        <a href="#real-time-demo" class="btn btn-outline-light btn-lg">Watch Live Demo</a>
                     </div>
                 </div>
                 <div class="col-lg-4 text-center">
-                    <i class="bi bi-diagram-3 display-1"></i>
+                    <i class="fas fa-project-diagram display-1" style="color: rgba(255,255,255,0.8);"></i>
                 </div>
             </div>
         </div>
@@ -400,33 +406,33 @@
             <h2 class="text-center mb-4">Real-Time Data Integration via MCP</h2>
             <div class="row">
                 <div class="col-lg-6 mb-4">
-                    <div class="card bg-dark text-white">
-                        <div class="card-header bg-info">
-                            <h5><i class="bi bi-globe"></i> Live Market Data Sources</h5>
+                    <div class="card process-card">
+                        <div class="card-header">
+                            <h5><i class="neutral-icon fas fa-globe"></i> Live Market Data Sources</h5>
                         </div>
                         <div class="card-body">
                             <ul class="list-unstyled">
-                                <li class="mb-2"><i class="bi bi-fuel-pump text-warning"></i> <strong>Fuel Prices:</strong> Real-time diesel rates by region</li>
-                                <li class="mb-2"><i class="bi bi-hammer text-info"></i> <strong>Labor Costs:</strong> Regional wage data ($52/hr CA, $42/hr TX)</li>
-                                <li class="mb-2"><i class="bi bi-tree text-success"></i> <strong>Materials:</strong> Lumber, foam, steel pricing</li>
-                                <li class="mb-2"><i class="bi bi-truck text-primary"></i> <strong>Carriers:</strong> FedEx, UPS performance metrics</li>
-                                <li class="mb-2"><i class="bi bi-map text-danger"></i> <strong>Routes:</strong> Real-time distance calculations</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-gas-pump"></i> <strong>Fuel Prices:</strong> Real-time diesel rates by region</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-hard-hat"></i> <strong>Labor Costs:</strong> Regional wage data ($52/hr CA, $42/hr TX)</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-tree"></i> <strong>Materials:</strong> Lumber, foam, steel pricing</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-shipping-fast"></i> <strong>Carriers:</strong> FedEx, UPS performance metrics</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-route"></i> <strong>Routes:</strong> Real-time distance calculations</li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-4">
-                    <div class="card bg-dark text-white">
-                        <div class="card-header bg-success">
-                            <h5><i class="bi bi-graph-up"></i> Dynamic Pricing Calculations</h5>
+                    <div class="card process-card">
+                        <div class="card-header">
+                            <h5><i class="neutral-icon fas fa-chart-line"></i> Dynamic Pricing Calculations</h5>
                         </div>
                         <div class="card-body">
                             <ul class="list-unstyled">
-                                <li class="mb-2"><i class="bi bi-calculator text-primary"></i> <strong>Base Freight:</strong> Distance × weight × carrier rates</li>
-                                <li class="mb-2"><i class="bi bi-fuel-pump text-warning"></i> <strong>Fuel Surcharge:</strong> Live regional fuel adjustments</li>
-                                <li class="mb-2"><i class="bi bi-shield text-info"></i> <strong>Insurance:</strong> Value-based coverage calculations</li>
-                                <li class="mb-2"><i class="bi bi-tools text-success"></i> <strong>Handling:</strong> Fragility-based special requirements</li>
-                                <li class="mb-2"><i class="bi bi-clock-history text-danger"></i> <strong>Timeline:</strong> Expedited service premiums</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-calculator"></i> <strong>Base Freight:</strong> Distance × weight × carrier rates</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-gas-pump"></i> <strong>Fuel Surcharge:</strong> Live regional fuel adjustments</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-shield-alt"></i> <strong>Insurance:</strong> Value-based coverage calculations</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-tools"></i> <strong>Handling:</strong> Fragility-based special requirements</li>
+                                <li class="mb-2"><i class="neutral-icon fas fa-clock"></i> <strong>Timeline:</strong> Expedited service premiums</li>
                             </ul>
                         </div>
                     </div>
@@ -438,15 +444,15 @@
         <section class="mb-5">
             <div class="row">
                 <div class="col-12">
-                    <div class="card bg-secondary">
-                        <div class="card-header bg-primary">
-                            <h3><i class="bi bi-brain"></i> AI Agent Learning & Memory System</h3>
+                    <div class="card process-card">
+                        <div class="card-header">
+                            <h3><i class="neutral-icon fas fa-brain"></i> AI Agent Learning & Memory System</h3>
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-6">
-                                    <h5><i class="bi bi-memory text-info"></i> Continuous Learning</h5>
-                                    <ul>
+                                    <h5><i class="neutral-icon fas fa-graduation-cap"></i> Continuous Learning</h5>
+                                    <ul class="text-muted">
                                         <li>Captures real agent reasoning and decision-making processes</li>
                                         <li>Analyzes performance metrics and accuracy rates</li>
                                         <li>Stores learning insights for future improvements</li>
@@ -454,8 +460,8 @@
                                     </ul>
                                 </div>
                                 <div class="col-lg-6">
-                                    <h5><i class="bi bi-journal-code text-success"></i> Complete Traceability</h5>
-                                    <ul>
+                                    <h5><i class="neutral-icon fas fa-clipboard-check"></i> Complete Traceability</h5>
+                                    <ul class="text-muted">
                                         <li>Full audit trail of every agent decision</li>
                                         <li>Detailed cost calculation breakdowns</li>
                                         <li>Performance confidence scoring (95%+ accuracy)</li>
@@ -471,11 +477,11 @@
 
         <!-- Call to Action -->
         <section class="text-center mb-5">
-            <div class="card bg-primary text-white">
+            <div class="card text-white" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);">
                 <div class="card-body p-5">
                     <h2>Experience the Future of Logistics</h2>
                     <p class="lead">See how Google CrewAI A2A and MCP transform your shipping operations</p>
-                    <a href="/" class="btn btn-light btn-lg me-3">Try AI Quote Generator</a>
+                    <a href="/" class="btn btn-light btn-lg me-3" style="color: var(--primary-color); font-weight: 600;">Try AI Quote Generator</a>
                     <a href="/analytics" class="btn btn-outline-light btn-lg">View Analytics Dashboard</a>
                 </div>
             </div>
