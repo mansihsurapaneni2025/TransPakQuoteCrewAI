@@ -34,6 +34,10 @@ app.register_blueprint(analytics_bp)
 from a2a_api_routes import a2a_bp
 app.register_blueprint(a2a_bp)
 
+# Initialize error handling
+from error_handler import error_handler, validate_shipment_data, ValidationError
+error_handler.init_app(app)
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
@@ -537,7 +541,7 @@ async def generate_enhanced_quote():
             
             quote = Quote(
                 shipment_id=shipment.id,
-                quote_content=json.dumps(result, indent=2),
+                quote_content=str(result),
                 status='enhanced_validated'
             )
             quote.set_agent_results({
