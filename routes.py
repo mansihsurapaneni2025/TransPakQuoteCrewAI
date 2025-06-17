@@ -30,6 +30,10 @@ crew_manager = TransPakCrewManager()
 # Register analytics blueprint
 app.register_blueprint(analytics_bp)
 
+# Register A2A blueprint
+from a2a_api_routes import a2a_bp
+app.register_blueprint(a2a_bp)
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
@@ -478,6 +482,90 @@ def admin_dashboard():
 def ai_agents_process():
     """AI Agents Process explanation page"""
     return render_template('ai_agents_process.html')
+
+@app.route('/generate_enhanced_quote', methods=['POST'])
+@limiter.limit("5 per minute")
+async def generate_enhanced_quote():
+    """
+    Generate quote using A2A enhanced workflow with external validation
+    """
+    try:
+        from external_agent_connector import cross_framework_orchestrator
+        
+        # Extract form data
+        shipment_info = {
+            'item_description': request.form.get('item_description', '').strip(),
+            'dimensions': request.form.get('dimensions', '').strip(),
+            'weight': request.form.get('weight', '').strip(),
+            'origin': request.form.get('origin', '').strip(),
+            'destination': request.form.get('destination', '').strip(),
+            'fragility': request.form.get('fragility', 'Standard'),
+            'special_requirements': request.form.get('special_requirements', '').strip(),
+            'timeline': request.form.get('timeline', '').strip()
+        }
+        
+        logger.info(f"Enhanced quote request: {shipment_info}")
+        
+        # Validate input
+        required_fields = ['item_description', 'dimensions', 'weight', 'origin', 'destination']
+        missing_fields = [field for field in required_fields if not shipment_info.get(field)]
+        
+        if missing_fields:
+            flash(f"Please provide: {', '.join(missing_fields)}", 'error')
+            return render_template('index.html', form_data=shipment_info)
+        
+        # Save shipment to database
+        shipment = Shipment(
+            item_description=shipment_info['item_description'],
+            dimensions=shipment_info['dimensions'],
+            weight=shipment_info['weight'],
+            origin=shipment_info['origin'],
+            destination=shipment_info['destination'],
+            fragility=shipment_info['fragility'],
+            special_requirements=shipment_info['special_requirements'],
+            timeline=shipment_info['timeline']
+        )
+        db.session.add(shipment)
+        db.session.commit()
+        
+        # Execute enhanced workflow with external validation
+        result = await cross_framework_orchestrator.execute_enhanced_workflow_with_external_validation(shipment_info)
+        
+        if result['success']:
+            # Save comprehensive quote to database
+            quote_data = result['transpak_workflow']['results']['final_quote']['result']
+            
+            quote = Quote(
+                shipment_id=shipment.id,
+                quote_content=json.dumps(result, indent=2),
+                status='enhanced_validated'
+            )
+            quote.set_agent_results({
+                'transpak_workflow': result['transpak_workflow'],
+                'external_validations': result['external_validations'],
+                'final_status': result['final_status']
+            })
+            db.session.add(quote)
+            db.session.commit()
+            
+            return render_template('enhanced_quote_result.html',
+                                 enhanced_result=result,
+                                 shipment_info=shipment_info,
+                                 quote_id=quote.id)
+        else:
+            logger.error(f"Enhanced quote generation failed: {result.get('error')}")
+            flash("Enhanced quote generation failed. Please try again.", 'error')
+            return render_template('index.html', form_data=shipment_info)
+            
+    except Exception as e:
+        logger.error(f"Error in enhanced quote route: {str(e)}")
+        flash("An unexpected error occurred. Please try again.", 'error')
+        return render_template('index.html', form_data=shipment_info if 'shipment_info' in locals() else {})
+
+@app.route('/a2a-demo')
+def a2a_demo():
+    """A2A Protocol demonstration page"""
+    return render_template('a2a_demo.html')
 
 @app.route('/health')
 def health_check():
