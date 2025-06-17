@@ -34,10 +34,6 @@ app.register_blueprint(analytics_bp)
 from a2a_api_routes import a2a_bp
 app.register_blueprint(a2a_bp)
 
-# Register enhanced dashboard API
-from enhanced_dashboard_api import dashboard_api
-app.register_blueprint(dashboard_api)
-
 # Initialize error handling
 from error_handler import error_handler, validate_shipment_data, ValidationError
 error_handler.init_app(app)
@@ -579,11 +575,6 @@ def a2a_demo():
 def knowledge_base():
     """Knowledge Base documentation page"""
     return render_template('knowledge_base.html')
-
-@app.route('/enhanced-dashboard')
-def enhanced_dashboard():
-    """Enhanced Analytics Dashboard"""
-    return render_template('enhanced_dashboard.html')
 
 @app.route('/health')
 def health_check():
