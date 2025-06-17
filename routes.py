@@ -567,6 +567,11 @@ def a2a_demo():
     """A2A Protocol demonstration page"""
     return render_template('a2a_demo.html')
 
+@app.route('/knowledge-base')
+def knowledge_base():
+    """Knowledge Base documentation page"""
+    return render_template('knowledge_base.html')
+
 @app.route('/health')
 def health_check():
     """

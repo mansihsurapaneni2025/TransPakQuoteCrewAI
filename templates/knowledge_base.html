@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Base - TransPak AI Quoter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #A41E21;
+            --neutral-50: #fafafa;
+            --neutral-100: #f5f5f5;
+            --neutral-200: #e5e5e5;
+            --neutral-500: #737373;
+            --neutral-600: #525252;
+            --neutral-700: #404040;
+            --neutral-800: #262626;
+        }
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background-color: var(--neutral-50);
+            color: var(--neutral-800);
+        }
+        
+        .navbar {
+            background-color: white;
+            border-bottom: 1px solid var(--neutral-200);
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+        
+        .card {
+            background-color: white;
+            border: 1px solid var(--neutral-200);
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background-color: var(--neutral-50);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #8a1a1d;
+            border-color: #8a1a1d;
+        }
+        
+        .code-block {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            margin: 0.5rem 0;
+            overflow-x: auto;
+        }
+        
+        .architecture-diagram {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+        
+        .component-box {
+            background-color: white;
+            border: 2px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem;
+            display: inline-block;
+            min-width: 120px;
+        }
+        
+        .component-box.frontend {
+            border-color: #007bff;
+            background-color: #e7f3ff;
+        }
+        
+        .component-box.backend {
+            border-color: var(--primary-color);
+            background-color: #ffeaea;
+        }
+        
+        .component-box.database {
+            border-color: #28a745;
+            background-color: #e8f5e8;
+        }
+        
+        .component-box.ai {
+            border-color: #ffc107;
+            background-color: #fff8e1;
+        }
+        
+        .toc {
+            position: sticky;
+            top: 2rem;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        
+        .toc-link {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--neutral-600);
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .toc-link:hover {
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+            background-color: var(--neutral-100);
+        }
+        
+        .toc-link.active {
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+            background-color: var(--neutral-100);
+            font-weight: 500;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .feature-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .feature-list li:before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        .tech-stack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .tech-item {
+            background-color: var(--neutral-100);
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .api-endpoint {
+            background-color: var(--neutral-100);
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            font-family: monospace;
+        }
+        
+        .method-get { border-left: 4px solid #28a745; }
+        .method-post { border-left: 4px solid #007bff; }
+        .method-put { border-left: 4px solid #ffc107; }
+        .method-delete { border-left: 4px solid #dc3545; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-shipping-fast me-2"></i>
+                TransPak AI Quoter
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/ai-agents-process">AI Agents Process</a>
+                <a class="nav-link" href="/a2a-demo">A2A Demo</a>
+                <a class="nav-link active" href="/knowledge-base">Knowledge Base</a>
+                <a class="nav-link" href="/admin">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Table of Contents -->
+            <div class="col-lg-3">
+                <div class="card toc">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-list me-2"></i>Table of Contents</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <a href="#overview" class="toc-link">System Overview</a>
+                        <a href="#architecture" class="toc-link">Architecture</a>
+                        <a href="#frontend" class="toc-link">Frontend Features</a>
+                        <a href="#backend" class="toc-link">Backend Components</a>
+                        <a href="#database" class="toc-link">Database Schema</a>
+                        <a href="#crewai" class="toc-link">CrewAI Configuration</a>
+                        <a href="#a2a-protocol" class="toc-link">A2A Protocol</a>
+                        <a href="#api-endpoints" class="toc-link">API Endpoints</a>
+                        <a href="#deployment" class="toc-link">Deployment</a>
+                        <a href="#development" class="toc-link">Development Setup</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- System Overview -->
+                <section id="overview" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-info-circle me-2"></i>System Overview</h2>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">TransPak AI Quoter is a sophisticated multi-agent AI platform implementing Google A2A (Agent-to-Agent) communication protocol for intelligent, cross-framework agent collaboration and dynamic skill negotiation.</p>
+                            
+                            <h5>Core Capabilities</h5>
+                            <ul class="feature-list">
+                                <li>Multi-agent AI orchestration using CrewAI framework</li>
+                                <li>Cross-framework agent communication via A2A protocol</li>
+                                <li>Dynamic skill negotiation and agent discovery</li>
+                                <li>Real-time pricing validation with external agents</li>
+                                <li>Compliance checking and documentation generation</li>
+                                <li>Interactive web interface with live monitoring</li>
+                                <li>Comprehensive API for external integrations</li>
+                            </ul>
+
+                            <h5>Technology Stack</h5>
+                            <div class="tech-stack-grid">
+                                <div class="tech-item">
+                                    <i class="fab fa-python fa-2x text-primary mb-2"></i>
+                                    <h6>Python 3.11</h6>
+                                    <small>Core Runtime</small>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fas fa-server fa-2x text-danger mb-2"></i>
+                                    <h6>Flask</h6>
+                                    <small>Web Framework</small>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fas fa-database fa-2x text-success mb-2"></i>
+                                    <h6>PostgreSQL</h6>
+                                    <small>Database</small>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fas fa-robot fa-2x text-warning mb-2"></i>
+                                    <h6>CrewAI</h6>
+                                    <small>AI Orchestration</small>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fas fa-brain fa-2x text-info mb-2"></i>
+                                    <h6>OpenAI GPT-4</h6>
+                                    <small>AI Models</small>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fab fa-bootstrap fa-2x text-primary mb-2"></i>
+                                    <h6>Bootstrap 5</h6>
+                                    <small>UI Framework</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Architecture -->
+                <section id="architecture" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-sitemap me-2"></i>System Architecture</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="architecture-diagram">
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <div class="component-box frontend">
+                                            <h6>Frontend Layer</h6>
+                                            <small>HTML5, Bootstrap, JavaScript</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <div class="component-box backend">
+                                            <h6>Flask Application</h6>
+                                            <small>Routes, Security, API</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <div class="component-box ai">
+                                            <h6>CrewAI Agents</h6>
+                                            <small>4 Specialized Agents</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <div class="component-box ai">
+                                            <h6>A2A Protocol</h6>
+                                            <small>Cross-Framework Comm</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="component-box database">
+                                            <h6>PostgreSQL</h6>
+                                            <small>Data Persistence</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="component-box ai">
+                                            <h6>External Agents</h6>
+                                            <small>Pricing & Compliance</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5>Key Architectural Patterns</h5>
+                            <ul>
+                                <li><strong>Multi-Agent Architecture:</strong> Specialized AI agents for different domain expertise</li>
+                                <li><strong>Protocol-Based Communication:</strong> Standardized A2A messaging following Google MCP</li>
+                                <li><strong>Modular Design:</strong> Loosely coupled components for scalability</li>
+                                <li><strong>Event-Driven Processing:</strong> Asynchronous agent communication</li>
+                                <li><strong>RESTful APIs:</strong> Standard HTTP interfaces for integration</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Frontend Features -->
+                <section id="frontend" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-desktop me-2"></i>Frontend Features</h2>
+                        </div>
+                        <div class="card-body">
+                            <h5>User Interface Components</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Core Pages</h6>
+                                    <ul class="feature-list">
+                                        <li>Homepage with quote request form</li>
+                                        <li>AI Agents Process explanation</li>
+                                        <li>A2A Protocol live demonstration</li>
+                                        <li>Admin dashboard with analytics</li>
+                                        <li>Knowledge base documentation</li>
+                                        <li>User authentication pages</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Interactive Features</h6>
+                                    <ul class="feature-list">
+                                        <li>Real-time agent discovery</li>
+                                        <li>Dynamic skill querying</li>
+                                        <li>Live communication monitoring</li>
+                                        <li>Quote generation progress tracking</li>
+                                        <li>System performance metrics</li>
+                                        <li>API endpoint testing</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h5>Technical Implementation</h5>
+                            <div class="code-block">
+// Frontend Technology Stack
+- Bootstrap 5.3.0 for responsive design
+- Font Awesome 6.0 for icons
+- Inter font family for typography
+- Custom CSS with CSS variables
+- Vanilla JavaScript for interactivity
+- Fetch API for AJAX communications</div>
+
+                            <h5>Design System</h5>
+                            <ul>
+                                <li><strong>Primary Color:</strong> #A41E21 (TransPak brand red)</li>
+                                <li><strong>Typography:</strong> Inter font family for modern readability</li>
+                                <li><strong>Layout:</strong> Responsive grid system with mobile-first approach</li>
+                                <li><strong>Components:</strong> Consistent card-based design pattern</li>
+                                <li><strong>Accessibility:</strong> WCAG 2.1 compliant color contrast and navigation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Backend Components -->
+                <section id="backend" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-server me-2"></i>Backend Components</h2>
+                        </div>
+                        <div class="card-body">
+                            <h5>Core Flask Application Structure</h5>
+                            <div class="code-block">
+app/
+├── main.py                 # Application entry point
+├── app.py                  # Flask app factory
+├── routes.py               # Main application routes
+├── models.py               # Database models
+├── agents.py               # CrewAI agent definitions
+├── crew_manager.py         # Agent orchestration
+├── a2a_protocol.py         # A2A communication protocol
+├── a2a_agent_adapters.py   # Agent adapters
+├── a2a_api_routes.py       # A2A API endpoints
+├── external_agent_connector.py  # External agent integration
+├── cache_manager.py        # Redis caching
+├── security_middleware.py  # Security features
+├── monitoring_config.py    # Performance monitoring
+└── templates/              # HTML templates</div>
+
+                            <h5>Key Backend Features</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Security & Authentication</h6>
+                                    <ul class="feature-list">
+                                        <li>Flask-Login user management</li>
+                                        <li>JWT token authentication</li>
+                                        <li>Rate limiting with Flask-Limiter</li>
+                                        <li>CSRF protection</li>
+                                        <li>Input validation and sanitization</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Performance & Monitoring</h6>
+                                    <ul class="feature-list">
+                                        <li>Redis caching for quote results</li>
+                                        <li>Database connection pooling</li>
+                                        <li>Request/response logging</li>
+                                        <li>Error tracking and reporting</li>
+                                        <li>Performance metrics collection</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h5>Flask Configuration</h5>
+                            <div class="code-block">
+# Core Configuration
+- SQLALCHEMY_DATABASE_URI: PostgreSQL connection
+- SQLALCHEMY_ENGINE_OPTIONS: Pool settings
+- SESSION_SECRET: Flask session security
+- JWT_SECRET_KEY: Token signing
+- OPENAI_API_KEY: AI model access
+- REDIS_URL: Caching configuration</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Database Schema -->
+                <section id="database" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-database me-2"></i>Database Schema</h2>
+                        </div>
+                        <div class="card-body">
+                            <h5>PostgreSQL Database Tables</h5>
+                            
+                            <h6>Users Table</h6>
+                            <div class="code-block">
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(64) UNIQUE NOT NULL,
+    email VARCHAR(120) UNIQUE NOT NULL,
+    password_hash VARCHAR(256) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</div>
+
+                            <h6>Shipments Table</h6>
+                            <div class="code-block">
+CREATE TABLE shipments (
+    id SERIAL PRIMARY KEY,
+    item_description TEXT NOT NULL,
+    dimensions VARCHAR(100) NOT NULL,
+    weight VARCHAR(50) NOT NULL,
+    origin VARCHAR(100) NOT NULL,
+    destination VARCHAR(100) NOT NULL,
+    fragility VARCHAR(50) DEFAULT 'Standard',
+    special_requirements TEXT,
+    timeline VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</div>
+
+                            <h6>Quotes Table</h6>
+                            <div class="code-block">
+CREATE TABLE quotes (
+    id SERIAL PRIMARY KEY,
+    shipment_id INTEGER REFERENCES shipments(id),
+    quote_content TEXT NOT NULL,
+    agent_results JSON,
+    status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</div>
+
+                            <h6>Quote History Table</h6>
+                            <div class="code-block">
+CREATE TABLE quote_history (
+    id SERIAL PRIMARY KEY,
+    quote_id INTEGER REFERENCES quotes(id),
+    action VARCHAR(50) NOT NULL,
+    details TEXT,
+    performed_by INTEGER REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</div>
+
+                            <h5>Database Features</h5>
+                            <ul class="feature-list">
+                                <li>ACID compliance for data integrity</li>
+                                <li>JSON columns for flexible agent result storage</li>
+                                <li>Foreign key constraints for referential integrity</li>
+                                <li>Indexed columns for query performance</li>
+                                <li>Automatic timestamp tracking</li>
+                                <li>Connection pooling for scalability</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CrewAI Configuration -->
+                <section id="crewai" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-robot me-2"></i>CrewAI Agent Configuration</h2>
+                        </div>
+                        <div class="card-body">
+                            <h5>Agent Architecture</h5>
+                            <p>The system employs four specialized CrewAI agents, each with distinct roles and capabilities:</p>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="card">
+                                        <div class="card-header bg-primary text-white">
+                                            <h6>Sales Briefing Agent</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <strong>Role:</strong> Shipment Analysis Specialist<br>
+                                            <strong>Goal:</strong> Analyze shipment requirements and validate information completeness<br>
+                                            <strong>Skills:</strong>
+                                            <ul>
+                                                <li>Item classification</li>
+                                                <li>Risk assessment</li>
+                                                <li>Requirements validation</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card">
+                                        <div class="card-header bg-success text-white">
+                                            <h6>Crating Design Agent</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <strong>Role:</strong> Packaging Engineer<br>
+                                            <strong>Goal:</strong> Design optimal packaging solutions for safe transport<br>
+                                            <strong>Skills:</strong>
+                                            <ul>
+                                                <li>Crate design and material selection</li>
+                                                <li>Cost estimation</li>
+                                                <li>Special requirements handling</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card">
+                                        <div class="card-header bg-warning text-dark">
+                                            <h6>Logistics Planner Agent</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <strong>Role:</strong> Transportation Coordinator<br>
+                                            <strong>Goal:</strong> Plan optimal shipping routes and logistics<br>
+                                            <strong>Skills:</strong>
+                                            <ul>
+                                                <li>Route optimization</li>
+                                                <li>Carrier selection</li>
+                                                <li>Cost calculation</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card">
+                                        <div class="card-header bg-info text-white">
+                                            <h6>Quote Consolidator Agent</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <strong>Role:</strong> Business Proposal Specialist<br>
+                                            <strong>Goal:</strong> Consolidate all components into professional quotes<br>
+                                            <strong>Skills:</strong>
+                                            <ul>
+                                                <li>Quote assembly</li>
+                                                <li>Cost breakdown</li>
+                                                <li>Terms generation</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5>Agent Configuration</h5>
+                            <div class="code-block">
+# CrewAI Configuration
+- Model: OpenAI GPT-4 (gpt-4-0125-preview)
+- Temperature: 0.1 for consistent outputs
+- Max Tokens: 4000 per agent response
+- Memory: Enabled for context retention
+- Tools: Custom pricing and validation tools
+- Collaboration: Sequential workflow execution</div>
+
+                            <h5>Workflow Execution</h5>
+                            <ol>
+                                <li><strong>Analysis Phase:</strong> Sales agent validates and analyzes shipment data</li>
+                                <li><strong>Design Phase:</strong> Crating agent creates packaging solution</li>
+                                <li><strong>Planning Phase:</strong> Logistics agent optimizes transportation</li>
+                                <li><strong>Consolidation Phase:</strong> Quote agent assembles final proposal</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- A2A Protocol -->
+                <section id="a2a-protocol" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-exchange-alt me-2"></i>Agent2Agent (A2A) Protocol</h2>
+                        </div>
+                        <div class="card-body">
+                            <h5>Google A2A MCP Standards Implementation</h5>
+                            <p>Our system implements the Agent2Agent communication protocol following Google's Model Context Protocol (MCP) standards for cross-framework agent interaction.</p>
+
+                            <h5>Core A2A Components</h5>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="tech-item">
+                                        <h6>Agent Registry</h6>
+                                        <small>Centralized agent discovery and capability indexing</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="tech-item">
+                                        <h6>Protocol Handler</h6>
+                                        <small>Message routing and communication management</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="tech-item">
+                                        <h6>Skill Negotiator</h6>
+                                        <small>Dynamic capability discovery and validation</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5>Agent Card Structure</h5>
+                            <div class="code-block">
+{
+  "agent_id": "transpak_sales_briefing_agent",
+  "name": "Sales Briefing Agent",
+  "framework": "crewai",
+  "version": "1.0.0",
+  "description": "Shipment analysis specialist",
+  "capabilities": [
+    {
+      "skill_id": "analyze_shipment",
+      "name": "Shipment Analysis",
+      "category": "analysis",
+      "input_types": ["shipment_data"],
+      "output_types": ["analysis_result"],
+      "parameters": {
+        "required": ["shipment_data"],
+        "optional": ["validation_level"]
+      }
+    }
+  ],
+  "endpoints": {
+    "message": "/api/v1/agents/{agent_id}/message",
+    "skill_query": "/api/v1/agents/{agent_id}/skills"
+  }
+}</div>
+
+                            <h5>Cross-Framework Communication</h5>
+                            <ul class="feature-list">
+                                <li>CrewAI to External Agent messaging</li>
+                                <li>Dynamic skill discovery and negotiation</li>
+                                <li>Asynchronous message handling</li>
+                                <li>Protocol versioning and compatibility</li>
+                                <li>Error handling and retry mechanisms</li>
+                                <li>Communication mode negotiation</li>
+                            </ul>
+
+                            <h5>External Agent Integration</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>External Pricing Validator</h6>
+                                    <ul>
+                                        <li>Market rate comparison</li>
+                                        <li>Pricing validation against standards</li>
+                                        <li>Cost variance analysis</li>
+                                        <li>Recommendation generation</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>External Compliance Checker</h6>
+                                    <ul>
+                                        <li>Regulatory compliance verification</li>
+                                        <li>Documentation requirements</li>
+                                        <li>Export control checking</li>
+                                        <li>Customs classification</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- API Endpoints -->
+                <section id="api-endpoints" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-code me-2"></i>API Endpoints</h2>
+                        </div>
+                        <div class="card-body">
+                            <h5>Web Application Routes</h5>
+                            <div class="api-endpoint method-get">
+                                <strong>GET /</strong> - Homepage with quote request form
+                            </div>
+                            <div class="api-endpoint method-get">
+                                <strong>GET /ai-agents-process</strong> - AI agents explanation page
+                            </div>
+                            <div class="api-endpoint method-get">
+                                <strong>GET /a2a-demo</strong> - A2A protocol demonstration
+                            </div>
+                            <div class="api-endpoint method-get">
+                                <strong>GET /knowledge-base</strong> - System documentation
+                            </div>
+                            <div class="api-endpoint method-post">
+                                <strong>POST /generate_quote</strong> - Standard quote generation
+                            </div>
+                            <div class="api-endpoint method-post">
+                                <strong>POST /generate_enhanced_quote</strong> - A2A enhanced workflow
+                            </div>
+
+                            <h5>A2A Protocol API</h5>
+                            <div class="api-endpoint method-get">
+                                <strong>GET /api/v1/a2a/agents</strong> - Discover all agents
+                            </div>
+                            <div class="api-endpoint method-get">
+                                <strong>GET /api/v1/a2a/agents/{agent_id}</strong> - Get agent details
+                            </div>
+                            <div class="api-endpoint method-get">
+                                <strong>GET /api/v1/a2a/skills/{skill_id}/agents</strong> - Find agents by skill
+                            </div>
+                            <div class="api-endpoint method-post">
+                                <strong>POST /api/v1/a2a/agents/{agent_id}/message</strong> - Send A2A message
+                            </div>
+                            <div class="api-endpoint method-post">
+                                <strong>POST /api/v1/a2a/agents/{agent_id}/execute</strong> - Execute agent skill
+                            </div>
+                            <div class="api-endpoint method-post">
+                                <strong>POST /api/v1/a2a/workflow/execute</strong> - Cross-framework workflow
+                            </div>
+
+                            <h5>Administrative API</h5>
+                            <div class="api-endpoint method-get">
+                                <strong>GET /api/system/metrics</strong> - System performance metrics
+                            </div>
+                            <div class="api-endpoint method-get">
+                                <strong>GET /api/analytics/cost-analysis</strong> - Cost analysis data
+                            </div>
+                            <div class="api-endpoint method-get">
+                                <strong>GET /api/v1/a2a/registry/status</strong> - Agent registry status
+                            </div>
+
+                            <h5>Authentication & Security</h5>
+                            <ul class="feature-list">
+                                <li>JWT token-based authentication for API access</li>
+                                <li>Rate limiting: 5 requests per minute for quote generation</li>
+                                <li>CORS headers for cross-origin requests</li>
+                                <li>Input validation and sanitization</li>
+                                <li>Error handling with structured responses</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Deployment -->
+                <section id="deployment" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-cloud me-2"></i>Deployment Configuration</h2>
+                        </div>
+                        <div class="card-body">
+                            <h5>Replit Deployment</h5>
+                            <div class="code-block">
+# .replit configuration
+language = "python3"
+run = "gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app"
+
+# pyproject.toml dependencies
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^3.0.0"
+gunicorn = "^21.2.0"
+crewai = "^0.28.8"
+openai = "^1.12.0"
+psycopg2-binary = "^2.9.9"
+flask-sqlalchemy = "^3.1.1"</div>
+
+                            <h5>Environment Variables</h5>
+                            <div class="code-block">
+# Required Environment Variables
+DATABASE_URL=postgresql://...
+OPENAI_API_KEY=sk-...
+SESSION_SECRET=random_secret_key
+REDIS_URL=redis://...
+
+# Optional Configuration
+FLASK_ENV=production
+JWT_SECRET_KEY=jwt_secret
+SENTRY_DSN=https://...</div>
+
+                            <h5>Production Considerations</h5>
+                            <ul class="feature-list">
+                                <li>Gunicorn WSGI server with multiple workers</li>
+                                <li>PostgreSQL database with connection pooling</li>
+                                <li>Redis caching for performance optimization</li>
+                                <li>Error monitoring with Sentry integration</li>
+                                <li>HTTPS enforcement and security headers</li>
+                                <li>Rate limiting and DDoS protection</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Development Setup -->
+                <section id="development" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-code-branch me-2"></i>Development Setup</h2>
+                        </div>
+                        <div class="card-body">
+                            <h5>Local Development</h5>
+                            <div class="code-block">
+# Clone and setup
+git clone [repository-url]
+cd transpak-ai-quoter
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Setup environment
+cp .env.example .env
+# Edit .env with your API keys
+
+# Database setup
+createdb transpak_dev
+python -c "from app import db; db.create_all()"
+
+# Run development server
+python main.py</div>
+
+                            <h5>Development Tools</h5>
+                            <ul class="feature-list">
+                                <li>Flask development server with auto-reload</li>
+                                <li>SQLAlchemy ORM for database operations</li>
+                                <li>Flask-Migrate for database migrations</li>
+                                <li>Pytest for unit and integration testing</li>
+                                <li>Black for code formatting</li>
+                                <li>Flake8 for code linting</li>
+                            </ul>
+
+                            <h5>Testing Strategy</h5>
+                            <div class="code-block">
+# Test structure
+tests/
+├── test_routes.py          # Web route testing
+├── test_agents.py          # CrewAI agent testing
+├── test_a2a_protocol.py    # A2A communication testing
+├── test_database.py        # Database model testing
+└── test_api.py             # API endpoint testing
+
+# Run tests
+pytest tests/ -v --coverage</div>
+
+                            <h5>Code Quality</h5>
+                            <ul class="feature-list">
+                                <li>Type hints for improved code documentation</li>
+                                <li>Docstrings following Google style guide</li>
+                                <li>Error handling with proper logging</li>
+                                <li>Security best practices implementation</li>
+                                <li>Performance monitoring and optimization</li>
+                                <li>Code review process and standards</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Table of Contents functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocLinks = document.querySelectorAll('.toc-link');
+            const sections = document.querySelectorAll('section[id]');
+
+            // Smooth scrolling for TOC links
+            tocLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            // Highlight current section in TOC
+            function updateActiveTocLink() {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.getBoundingClientRect().top;
+                    if (sectionTop <= 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            // Update active link on scroll
+            window.addEventListener('scroll', updateActiveTocLink);
+            updateActiveTocLink(); // Initial call
+        });
+    </script>
+</body>
+</html>
