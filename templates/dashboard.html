@@ -79,7 +79,10 @@
 <body>
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('dashboard') }}">TransPak AI</a>
+            <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+                <img src="{{ url_for('static', filename='transpak_logo.png') }}" alt="TransPak" style="height: 32px;" class="me-2">
+                TransPak AI
+            </a>
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="{{ url_for('index') }}">New Quote</a>
                 <a class="nav-link" href="{{ url_for('list_quotes') }}">All Quotes</a>
